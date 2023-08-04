@@ -209,12 +209,11 @@
 
             datas.reportVO.forEach((d) => {
                     texts += `<tr>`;
-                    texts +=
-                        `<td> <a>본문 보기</a> </td>
+                    texts += `<td> <a>본문 보기</a> </td>
                     <td> <a>신고 사유</a> </td>
                     <td> <a>신고 당한 날짜</a> </td>
                     <td> \${d.r_count} </td>
-                    <td> <a>X</a> </td>
+                    <td> <a>블라인드 처리</a> </td>
                     </tr>`;
             })
 
