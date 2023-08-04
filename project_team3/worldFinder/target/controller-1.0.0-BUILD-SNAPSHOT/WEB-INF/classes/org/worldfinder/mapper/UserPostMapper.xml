@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.worldfinder.mapper.UserPostMapper">
+	<select id="getAllList" resultType="org.worldfinder.domain.UserPostVO">
+		select * from userpost_table3
+	</select>
+
+	<select id="postGet" parameterType="long" resultType="org.worldfinder.domain.UserPostVO">
+		select * from userpost_table3 where up_idx = #{up_idx}
+	</select>
+
+	<insert id="postInsert" parameterType="org.worldfinder.domain.UserPostVO">
+		insert into userpost_table3(up_idx, u_writer, country, title, up_content)
+		values(
+			userpost_seq3.nextval,
+			#{u_writer},
+			#{country},
+			#{title},
+			#{up_content}
+		)
+	</insert>
+
+
+</mapper>

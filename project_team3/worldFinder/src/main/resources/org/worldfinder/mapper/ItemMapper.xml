@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.worldfinder.mapper.ItemMapper">
+
+
+	<!-- CREATE TABLE item_table3 (
+   ITEM_IDX   NUMBER   primary key,
+   country   VARCHAR2(50)   references c_class_table3(country),
+   item_Name   VARCHAR2(50)   NOT NULL,
+   regdate   date   DEFAULT sysdate,
+   introduce   VARCHAR2(200)   NOT NULL,
+   image   VARCHAR2(50)   NOT NULL,
+   address   VARCHAR2(100)   NOT NULL,
+   item_Category   VARCHAR(255)   NOT NULL,
+   people   NUMBER   NOT NULL,
+   price   NUMBER,
+   tel   varchar2(30)   NOT NULL,
+   item_Option   VARCHAR2(20),
+   item_Url   varchar2(50)
+); -->
+
+	<insert id="insertItem" parameterType="org.worldfinder.domain.ItemVO">
+		insert into item_table3 values(
+			item_seq3.NEXTVAL
+			,#{country}
+			,#{item_Name}
+			,SYSDATE
+			,#{introduce}
+			,#{image}
+			,#{address}
+			,#{item_Category}
+			,#{people}
+			,#{price}
+			,#{tel}
+			,#{item_Option}
+			,#{item_Url}			
+		)
+	</insert>
+	
+	<select id="getItemList" resultType="org.worldfinder.domain.ItemVO">
+		select * from item_table3
+	</select>
+	
+	
+	<update id="updateItem" parameterType="org.worldfinder.domain.ItemVO">
+		update item_table3 
+		set
+		item_Name = #{item_Name}
+		,introduce = #{introduce}
+		,image = #{image}
+		,address = #{address}
+		,people = #{people}
+		,item_Url = #{item_Url}
+		where
+		item_Idx = #{item_Idx}
+	</update>
+	
+	<delete id="removeItem" parameterType="int">
+		delete from item_table3
+		where item_Idx = #{item_Idx}
+	</delete>
+	
+	<select id="getListwithPaging" parameterType="org.worldfinder.domain.Criteria" resultType="org.worldfinder.domain.ItemVO">
+		<![CDATA[
+			select rownum rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+							people, price,  tel, item_Option, item_Url
+			from
+				(select 
+				rownum rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+							people, price,  tel, item_Option, item_Url 
+				from item_table3
+				where rownum <= 
+				]]>(#{amount} * #{pageNum})
+				<![CDATA[)
+			where rn > ]]>(#{amount} * #{pageNum} - #{amount})
+	</select>
+	
+	
+	<select id="countItemList" resultType="int">
+		select count(*) from item_table3
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+</mapper>

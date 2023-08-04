@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.worldfinder.mapper.UserMapper">
+	<insert id="userJoin" parameterType="org.worldfinder.domain.UserVO">
+		insert into user_table3(u_writer,u_pw,u_name,birth,phone,mail,gender,nationality,auth)
+		 values(
+			#{u_writer}, 
+			#{u_pw}, 
+			#{u_name}, 
+			#{birth}, 
+			#{phone}, 
+			#{mail}, 
+			#{gender}, 
+			#{nationality},
+			'user'
+			)
+	</insert>
+	
+	<!-- 아이디 중복검사 -->
+	<select id="checkId" resultType="int">
+        select count(*) from user_table3 where u_writer=#{u_writer}
+    </select>
+	
+	<!-- 로그인 페크-->
+	 <select id="loginCheck" resultType="String">
+		select u_writer, u_pw from user_table3 
+			where u_writer = #{u_writer}
+				and u_pw = #{u_pw}
+	
+	</select> 
+
+
+
+
+</mapper>

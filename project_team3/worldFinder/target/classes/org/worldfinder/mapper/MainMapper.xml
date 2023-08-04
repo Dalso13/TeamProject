@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.worldfinder.mapper.MainMapper">
+    <select id="readCountry" resultType="org.worldfinder.domain.CountryClassVO">
+             SELECT * FROM C_CLASS_TABLE3
+    </select>
+    <insert id="writeRequest" parameterType="org.worldfinder.domain.RequestVO">
+        insert into REQUEST_TABLE3 values (#{rq_name},#{rq_address},#{rq_tel},#{rq_category},#{rq_url})
+    </insert>
+    <select id="readRequest" resultType="org.worldfinder.domain.RequestVO" parameterType="org.worldfinder.domain.Criteria">
+        <![CDATA[	 SELECT * FROM
+            (select /*+index_desc(tbl_board pk_board) */
+                 rownum rn, RQ_NAME, RQ_ADDRESS, RQ_TEL, RQ_CATEGORY,RQ_URL
+             from REQUEST_TABLE3
+             where rownum <= (#{pageNum} * #{amount}) ) s
+        where s.rn > ((#{pageNum}-1) * #{amount})
+        ]]>
+
+
+    </select>
+    <select id="readUserReport" resultType="org.worldfinder.domain.ReportVO" parameterType="org.worldfinder.domain.Criteria">
+            <![CDATA[ SELECT * FROM
+                     (select rownum rn, idx,r_category  ,count(*)as r_count from report_table3
+                    where r_category = 'USER' and rownum <= (#{pageNum} * #{amount})
+                    GROUP By idx, r_category, rownum ) s
+                 where s.rn > ((#{pageNum}-1) * #{amount})
+            ]]>
+    </select>
+    <select id="readCommentReport" resultType="org.worldfinder.domain.ReportVO" parameterType="org.worldfinder.domain.Criteria">
+        <![CDATA[ SELECT * FROM
+                (select rownum rn , idx,r_category  ,count(*)as r_count from report_table3
+                 where r_category = 'COMMENT' and rownum <= (#{pageNum} * #{amount})
+                 GROUP By idx, r_category,rownum ) s
+            where s.rn > ((#{pageNum}-1) * #{amount})
+        ]]>
+    </select>
+    <select id="readContinent" resultType="org.worldfinder.domain.CountryClassVO">
+        select distinct CONTINENT , DETAILS_CONTINENT FROM C_CLASS_TABLE3
+    </select>
+    <select id="countryList" resultType="hashMap" parameterType="String">
+        select COUNTRY from C_CLASS_TABLE3 where DETAILS_CONTINENT = #{details_continet}
+    </select>
+    <insert id="writeCountry" parameterType="org.worldfinder.domain.CountryVO">
+        INSERT INTO COUNTRY_TABLE3
+        VALUES (#{country},#{content},SYSDATE,#{c_img})
+    </insert>
+    <select id="readCountryPage" resultType="org.worldfinder.domain.CountryVO" parameterType="String">
+        SELECT * FROM  COUNTRY_TABLE3 WHERE COUNTRY = #{country}
+    </select>
+    <select id="readfilter" resultType="hashMap" parameterType="String">
+
+        select distinct
+            <choose>
+                <when test="category == 'DETAILS_CONTINENT'">
+                    DETAILS_CONTINENT from C_CLASS_TABLE3 where CONTINENT = #{filterValue}
+                </when>
+                <otherwise>COUNTRY from C_CLASS_TABLE3 where DETAILS_CONTINENT = #{filterValue}</otherwise>
+            </choose>
+    </select>
+    <select id="getTotalCount" resultType="int">
+        SELECT count(*) FROM REQUEST_TABLE3
+    </select>
+    <select id="clearCountList" resultType="hashMap">
+        SELECT country FROM  COUNTRY_TABLE3
+    </select>
+    <update id="countryModify" parameterType="org.worldfinder.domain.CountryVO">
+        update COUNTRY_TABLE3
+        set  CONTENT = #{content}  <if test="c_img != ''"> , C_IMG = #{c_img} </if>
+        where COUNTRY = #{country}
+    </update>
+    <delete id="deleteCountry" parameterType="String">
+        delete from COUNTRY_TABLE3 where COUNTRY = #{country}
+    </delete>
+</mapper>
