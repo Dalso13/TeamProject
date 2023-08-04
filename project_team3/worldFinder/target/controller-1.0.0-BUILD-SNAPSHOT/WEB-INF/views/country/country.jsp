@@ -36,7 +36,23 @@
                         ${countryPage.content}
                 </div>
                 <div id="userPost">
-                    <div>유저 게시글</div>
+                    <br>
+                    <hr>
+                    <br>
+                    <h1>유저 게시글</h1>
+                    <div>
+                        <span>
+                            <%--이미지--%>
+                            <div>
+                                <div>제목</div>
+                                <div>작성자</div>
+                                <div>조회수</div>
+                                <div>좋아요수</div>
+                                <div>날짜</div>
+                            </div>
+                        </span>
+                    </div>
+
                 </div>
             </c:otherwise>
         </c:choose>
