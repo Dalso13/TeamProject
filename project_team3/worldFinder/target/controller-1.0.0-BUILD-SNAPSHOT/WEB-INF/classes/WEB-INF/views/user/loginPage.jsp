@@ -1,39 +1,81 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <body>
 	<div>
-		<img alt="." src="/resources/image/logo.png" width="500px" height="150px">
+		<%@include file="../include/logo.jsp"%>
 	</div>
 	<div>
 		<h2>Login</h2>
-		<form method="get">
+		<form method="post" id="loginForm">
 			<table>
 				<tr>
-					<td><input type="text" name="u_writer" placeholder="아이디"></td>
+					<td><input type="text" name="u_writer" placeholder="아이디" id="signInId" >
+					<span id="idCheck"></span></td>
 				</tr>
 				<tr>
-					<td><input type="password" name="u_pw" placeholder="비밀번호"></td>
+					<td><input type="password" name="u_pw" placeholder="비밀번호" id="signInPw">
+					<span id="pwCheck"></span></td>
 				</tr>
 				<tr>
 					<td>
-						<input type="checkbox" id="remember_check">아이디 저장하기
+						<!-- <input type="checkbox" id="remember_check">아이디 저장하기 -->
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center">
-						<input type="submit" value="로그인"> 
-						<input type="button" value="회원가입"> 
+					<td colspan="2" align="left">
+						<button type="button" id="signIn-btn" value="로그인">로그인</button>
+					<c:if test="${user == 'faile' }">
+						<div style="color: red">
+							아이디 또는 비밀번호가 일치하지 않습니다.
+						</div>
+					</c:if>	
+					<c:if test="${user == 'logout'}">
+						<div style="color: red">
+							로그아웃되었습니다.
+						</div>
+					</c:if>	
+						<button type="button" id="goJoin" value="회원가입" onClick="location.href='/user/joinPage'">회원가입</button>
 					</td>
 				</tr>
-				
+					 <tr>
+					<td colspan="2" align="center">
+						<a href="/user/idFindPage" class="btnIdP">아이디  찾기</a>
+						<a href="/user/pwFind" class="btnPwP">비밀번호  찾기</a>
+					</td>
+				</tr>
 			</table>		
 		</form>
 	</div>
 </body>
+<script type="text/javascript">
+	// 로그인
+	$(document).ready(function() {
+		$("#signIn-btn").click(function() {
+			var id = $("#signInId").val();
+			var pw = $("#signInPw").val();
+			if (id == "") {
+				alert("아이디를 입력하세요.");
+				$("#signInId").focus();
+				return;
+			}
+			if (pw == "") {
+				alert("비밀번호를 입력하세요.");
+				$("#signInPw").focus
+				return;
+			}
+			$('#loginForm').attr("action", "/user/login");
+			$("#loginForm").submit();
+		});
+	});
+
+	
+</script>
 </html>

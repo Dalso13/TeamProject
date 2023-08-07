@@ -78,9 +78,47 @@
 			where rn > ]]>(#{amount} * #{pageNum} - #{amount})
 	</select>
 	
+	<select id="getListwithFilter" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="org.worldfinder.domain.ItemVO">
+		<![CDATA[
+			select rownum rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+							people, price,  tel, item_Option, item_Url
+			from
+				(select 
+				rownum rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+							people, price,  tel, item_Option, item_Url 
+				from item_table3
+				where rownum <= 
+				]]>(#{amount} * #{page})
+				<!-- ========================= -->
+				<if test="country!=null and !country.equals('')">and country = #{country}</if>
+				<if test="item_Category!=null and !item_Category.equals('')">and item_Category = #{item_Category}</if>
+				<if test="people!=null and !people.equals('')">and people >= #{people}</if>
+				<!-- ========================= -->
+				<![CDATA[)
+			where rn > ]]>(#{amount} * #{page} - #{amount})
+	</select>
+	
+	<select id="countApplyFilter" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="int">
+		<![CDATA[
+			select count(*) from item_table3 where 1=1 ]]>
+			<!-- ========================= -->
+			<if test="country!=null and !country.equals('')">and country = #{country}</if>
+			<if test="item_Category!=null and !item_Category.equals('')">and item_Category = #{item_Category}</if>
+			<if test="people!=null and !people.equals('')">and people >= #{people}</if>
+			<!-- ========================= -->
+	</select>
+	
 	
 	<select id="countItemList" resultType="int">
 		select count(*) from item_table3
+	</select>
+	
+	<select id="selectWithHotel" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="org.worldfinder.domain.ItemVO">
+	
+	</select>
+	
+	<select id="selectWithSpot" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="org.worldfinder.domain.ItemVO">
+	
 	</select>
 	
 	

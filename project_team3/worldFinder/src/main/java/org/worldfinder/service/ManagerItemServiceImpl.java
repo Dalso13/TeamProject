@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.worldfinder.domain.Criteria;
+import org.worldfinder.domain.ItemFilterVO;
 import org.worldfinder.domain.ItemVO;
 import org.worldfinder.mapper.ItemMapper;
 
@@ -50,6 +51,21 @@ public class ManagerItemServiceImpl implements ManagerItemService{
 	public List<ItemVO> getListWithPaging(Criteria cri) {
 		log.info("service getListWithPaging...");
 		return mapper.getListwithPaging(cri);
+	}
+	
+	@Override
+	public List<ItemVO> getListwithFilter(ItemFilterVO itemFiltervo) {
+		log.info("service getListwithFilter...");
+		System.out.println("service getListwithFilter...");
+		
+	
+		return mapper.getListwithFilter(itemFiltervo);
+	}
+	
+	@Override
+	public int countApplyFilter(ItemFilterVO itemFiltervo) {
+		log.info("service countApplyFilter...");
+		return mapper.countApplyFilter(itemFiltervo);
 	}
 	
 	

@@ -104,7 +104,7 @@
 				</c:if>
 				<c:if test="${empty list}">
 					<tr>
-						<td style="width: 400px; height: 50px;">
+						<td style="width: 400px; height: 50;">
 							빠른 시일 내에 추가 예정입니다! 감사합니다!
 						</td>
 					</tr>

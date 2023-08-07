@@ -6,29 +6,19 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style type="text/css">
-	/* 중복아이디 존재하지 않는경우 */
-	.id_input_re_1{
-		color : green;
-		display : none;
-	}
-	/* 중복아이디 존재하는 경우 */
-	.id_input_re_2{
-		color : red;
-		display : none;
-	}
+
 </style>
 </head>
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <body>
 	<div>
-		<img alt="." src="/resources/image/logo.png" width="500px" height="150px">
+		<%@include file="../include/logo.jsp"%>
 	</div>
 	<div>
 		<h2>회원가입</h2>
 		<form id="join_form" method="post" >
 			<table>
-			
 				<tr>
 					<th>아이디</th>				
 					<td><input type="text" name="u_writer" id="user_id"
@@ -61,13 +51,14 @@
 				</tr>
 				<tr>
 					<th>이메일</th>				
-					<td><input type="email" name="mail" id="mail" placeholder="(필수입력)"> </td>
+					<td><input type="email" name="mail" id="mail" pattern=".+@gmail\.com" placeholder="example@gmail.com" required>
+						<span id="emailChk"></span> </td>
 				</tr>
 				<tr>
 					<th>성별</th>				
 					<td>
-						<input type="radio" name="gender" value="남" id="male " checked="checked">남
-						<input type="radio" name="gender" value="여" id="female">여
+						<input type="radio" name="gender" value="남" id="male" checked="checked">남
+						<input type="radio" name="gender" value="여" id="female">여 
 					</td>
 				</tr>
 				<tr>
@@ -91,24 +82,20 @@
 		});
 	});
 	*/
-
-
-	
 	// 아이디 중복 체크-----------------------------------------------------------------------------
 	$(function() {
-    
     //각 입력값들의 유효성 검증을 위한 정규표현식을 변수로 선언.
        var getIdCheck = /^[0-9a-z]{8,16}$/;		
        var getPwCheck = RegExp(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~])|([!,@,#,$,%,^,&,*,?,_,~].*[a-zA-Z0-9])/);
+       var getMailCheck = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
        
     // 입력값 중 하나라도 만족하지 못한다면 회원가입 처리를 막기위한 논리형 변수 선언.
    	 var chk1 = false, chk2 = false, chk3 = false, // 아이디, 비번, 비번확인
    	 	chk4 = false, chk5 = false, chk6 = false, // 이름, 생년월일, 연락처
-   	 	chk7 = false, chk8 = false, chk9 = false;	// 이메일, 성별, 국적
+   	 	chk7 = false, chk8 = true, chk9 = false;	// 이메일, 성별, 국적
    	    
-    
     //회원가입시 사용자의 입력값 검증!
-    //1. ID입력값 검증 
+    //1. ID입력값 검증 ------------------------------------------------------------
     $('#user_id').keyup(function() {
        if($(this).val() === '' ) { // 아이디 공백일 경우
           $(this).css(' border-color', 'red');
@@ -152,8 +139,7 @@
         	}); // end ajax(아이디 중복 확인)
        }
     })
-	
-	
+    
  	// 2. PW 입력값 검증 -------------------------------------------------------------------------
   	$('#password').keyup(function() {
   		
@@ -181,7 +167,7 @@
   	});
   	// PW 검증 끝
   	
-  	// 3. PW 확인란 검증 
+  	// 3. PW 확인란 검증 -----------------------------------------------------------
   	$('#password_check').keyup(function() {
   		
   		// 비밀번호 확인 공백 검증
@@ -209,12 +195,9 @@
   	});
   	// PW 확인 검증 끝
 
-  	
-  	
-	
+   
 	//회원가입
-	    	// 사용자가 회원 가입 버튼을 눌렀을 때의 이벤트 처리 
-      	// 사용자가 입력하는 4가지 데이터 중 단 하나라도 문제가 있으면 회원가입 처리하면 안됨
+	    // 사용자가 회원 가입 버튼을 눌렀을 때의 이벤트 처리 
       	$('#signup-btn').click(function() {
 		// input 공백 체크 -----------------------------------------  
       		if($('#user_id').val() == ""){
@@ -255,24 +238,22 @@
 			}else {
 				chk6 = true;
 			}
+			
 			if($('#mail').val() == ""){
 				alert("메일주소를 입력해주세요.");
 				return;
 			}else {
 				chk7 = true;
 			}
-			if($('#gender').val() == ""){
-				alert("성별을 선택해주세요.");
-				return;
-			}else {
-				chk8 = true;
-			}
+			
+			
 			if($('#naion').val() == ""){
 				alert("국적을 입력해주세요.");
 				return;
 			}else {
 				chk9 = true;
 			}
+			
 		
       		if(chk1 && chk2 && chk3 && chk4 && chk5 && chk6 && chk7 && chk8 && chk9){
       			// 모두 true라면
@@ -310,7 +291,6 @@
       			};
       			// 아직은 js객체이므로 JSON으로 변환해서 ajax의 data에 넣어야함
       			
-      			// 비동기 방식 
       			$.ajax({
       				type:'POST',
       				url:'/user/join',
@@ -323,7 +303,7 @@
 						// 서버에서 다시 값을 보내면 result에 들어감
 						console.log('통신 성공 : ' + result);
 						alert("회원가입 되었습니다.");
-						location.href = '/user/loginPage';
+						location.href = '/user/login';
 					}, 
 					error : function(){
 						alert("회원가입 실패");

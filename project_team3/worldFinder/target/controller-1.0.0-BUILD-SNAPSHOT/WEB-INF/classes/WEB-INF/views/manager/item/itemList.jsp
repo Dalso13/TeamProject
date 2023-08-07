@@ -86,8 +86,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <!-- 구글 맵 api 사용 설치 파일 -->
-	<%--여기 키값이 들어가는데 보안상에 문제로 일단 지윰--%>
-<script src="http://maps.googleapis.com/maps/api/js?"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDMR_wbRSxhUfjlmG_Pbk6OHjr6mJvgkMI"></script>
 
 <!-- 부트스트랩 달력 사용 설치 파일 -->
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">

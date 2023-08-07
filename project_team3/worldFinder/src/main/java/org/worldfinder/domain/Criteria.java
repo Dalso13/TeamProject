@@ -20,5 +20,9 @@ public class Criteria {
 		this.pageNum = 1;
 		this.amount = 10;	//아무 값도 설정하지 않았을 때의 기본값
 	}
+	public Criteria(int pageNum) {	//기본 생성자
+		this.pageNum = pageNum;
+		this.amount = 10;	//아무 값도 설정하지 않았을 때의 기본값
+	}
 	
 }
