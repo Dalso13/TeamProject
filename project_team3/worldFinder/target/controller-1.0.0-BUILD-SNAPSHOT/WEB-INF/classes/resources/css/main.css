@@ -29,6 +29,7 @@ img {
 }
 
 #res{
+    z-index: 100;
     text-align : left;
     display : none;
     margin: auto;
