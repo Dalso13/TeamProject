@@ -74,4 +74,8 @@
     <delete id="deleteCountry" parameterType="String">
         delete from COUNTRY_TABLE3 where COUNTRY = #{country}
     </delete>
+
+    <select id="countrySearch" parameterType="String" resultType="String">
+        select country from C_CLASS_TABLE3 where  DETAILS_CONTINENT = #{details_continent}
+    </select>
 </mapper>

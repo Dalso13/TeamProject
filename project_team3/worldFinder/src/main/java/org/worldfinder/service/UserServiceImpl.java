@@ -3,7 +3,9 @@ package org.worldfinder.service;
 
 import javax.servlet.http.HttpSession;
 
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.worldfinder.domain.UserVO;
@@ -11,16 +13,23 @@ import org.worldfinder.mapper.UserMapper;
 
 import lombok.extern.log4j.Log4j;
 
+import java.util.List;
+
 @Log4j
 @Service
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserMapper usermapper;
+
+	@Setter(onMethod_= @Autowired )
+	private PasswordEncoder pwencoder;
 	
 	@Override
 	public int userJoin(UserVO vo){
 		log.info("userJoin...." + vo);
-		
+
+		vo.setU_pw(pwencoder.encode(vo.getU_pw()));
+
 		return usermapper.userJoin(vo);
 	}
 	
@@ -35,12 +44,7 @@ public class UserServiceImpl implements UserService {
 	public int loginCheck(UserVO vo) {
 		return usermapper.loginCheck(vo);
 	}
-	
-	// 로그인 get
-	@Override
-	public UserVO getUser(UserVO vo) {
-		return usermapper.getUser(vo);
-	}
+
 
 	@Override
 	public void logout(HttpSession session) {
@@ -49,7 +53,7 @@ public class UserServiceImpl implements UserService {
 	
 	// 아이디찾기
 	@Override
-	public UserVO findId(UserVO vo) {
+	public List<String> findId(UserVO vo) {
 		return usermapper.findId(vo);
 	}
 	

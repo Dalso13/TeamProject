@@ -87,4 +87,10 @@ public class MainServiceImpl implements MainService {
     public int deleteCountry(String country) {
         return mapper.deleteCountry(country);
     }
+
+    // 세부대륙 검색 결과 가져오기
+    @Override
+    public  List<String> countrySearch(String details_continent){
+        return mapper.countrySearch(details_continent);
+    };
 }

@@ -1,6 +1,7 @@
 package org.worldfinder.domain;
 
-import java.util.Date;
+import java.sql.Date;
+import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,9 @@ import lombok.NoArgsConstructor;
 public class UserVO {
 	private String u_writer, u_pw, u_name, phone, mail, nationality, auth, old_pw, birth, gender;
 	private Date reg_date;
-	
-	@Autowired
-	private SqlSessionTemplate sql;
-	
-	public UserVO findId(UserVO vo) {
-		System.out.println("==> Mybatis로 findId() 기능 처리");
-		return sql.selectOne("UserDAO.findId", vo);
-	}
+
+	private List<AuthVO> authList;
+
 
 	
 	

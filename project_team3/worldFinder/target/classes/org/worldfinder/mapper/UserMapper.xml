@@ -25,12 +25,7 @@
         select count(*) from user_table3 where u_writer=#{u_writer}
     </select>
     
-<!-- Login  -->    
-	<!-- 로그인 get -->
-	 <select id="getUser" parameterType="org.worldfinder.domain.UserVO"  resultType="org.worldfinder.domain.UserVO">
-		select * from user_table3 
-			where u_writer = #{u_writer} and u_pw = #{u_pw}
-	</select> 
+<!-- Login  -->
 	<!-- 로그인 체크 -->
 	<select id="loginCheck" resultType="int" >
 		select count(*) from user_table3 where u_writer = #{u_writer} and u_pw = #{u_pw}
@@ -38,10 +33,34 @@
 	
 	<!-- 아이디, 비밀번호 찾기 -->
 	<!-- 아이디찾기 -->
-	<select id="findId" resultType="org.worldfinder.domain.UserVO">
-		select * from user_table3 where u_name=#{u_name} and phone=#{phone} and mail=#{mail}
+	<select id="findId" resultType="String">
+		select U_WRITER from user_table3 where u_name=#{u_name} and phone=#{phone} and mail=#{mail}
 	</select>
 
 
+	<resultMap type="org.worldfinder.domain.UserVO" id="memberMap">
+		<result property="u_writer" column="u_writer"/>
+		<result property="u_pw" column="u_pw"/>
+		<result property="u_name" column="u_name"/>
+		<result property="phone" column="phone"/>
+		<result property="mail" column="mail"/>
+		<result property="nationality" column="nationality"/>
+		<result property="auth" column="auth"/>
+		<result property="old_pw" column="old_pw"/>
+		<result property="birth" column="birth"/>
+		<result property="gender" column="gender"/>
+		<collection property="authList" resultMap="authMap"></collection>
+	</resultMap>
+
+	<resultMap type="org.worldfinder.domain.AuthVO" id="authMap">
+		<result property="u_writer" column="u_writer"/>
+		<result property="auth" column="auth"/>
+	</resultMap>
+
+	<!-- 로그인 get -->
+	<select id="getUser" parameterType="String"  resultMap="memberMap">
+		select * from user_table3
+		where u_writer = #{u_writer}
+	</select>
 
 </mapper>

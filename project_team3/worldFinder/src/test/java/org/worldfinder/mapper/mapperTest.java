@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.worldfinder.domain.UserVO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,13 +20,13 @@ import java.util.Map;
 public class mapperTest {
 
     @Autowired
-    private MainMapper mapper;
+    private UserMapper mapper;
 
     @Test
     public void tests(){
-       List<Map<String,String>> test = mapper.readfilter("북아시아","COUNTRY");
+        UserVO vo = mapper.getUser("admin1234");
 
-       log.info(test.toString());
+       log.info(vo.toString());
     }
     
     

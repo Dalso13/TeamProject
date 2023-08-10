@@ -11,67 +11,90 @@
 </head>
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<link rel="stylesheet" href="../../../resources/css/base.css">
+<style>
+	#body div{
+		text-align: center;
+	}
+	table {
+		text-align: center;
+		margin: auto;
+	}
+	tr span {
+		position: absolute;
+	}
+</style>
 <body>
-	<div>
-		<%@include file="../include/logo.jsp"%>
-	</div>
-	<div>
-		<h2>회원가입</h2>
-		<form id="join_form" method="post" >
-			<table>
-				<tr>
-					<th>아이디</th>				
-					<td><input type="text" name="u_writer" id="user_id"
-						class="form-control tooltipstered" maxlength="14"
-						required="required" aria-required="true"
-						placeholder="문자, 숫자포함(필수 입력)"> 
-						<span id="idCk"></span> </td>
-				</tr>
-				<tr>
-					<th>비밀번호 입력</th>				
-					<td><input type="password" name="u_pw" id="password" placeholder="비밀번호 입력(필수입력)"> 
-						<span id="pwChk"></span> </td>
-				</tr>
-				<tr>
-					<th>비밀번호 확인</th>				
-					<td><input type="password" name="u_pw" placeholder="비밀번호를 한번 더 입력해 주세요." id="password_check"> 
-						<span id="pwChk2"></span> </td>
-				</tr>
-				<tr>
-					<th>성명</th>				
-					<td><input type="text" name="u_name" id="name" placeholder="이름입력 (필수입력)"> </td>
-				</tr>
-				<tr>
-					<th>생년월일</th>				
-					<td><input type="text" name="birth" id="birth" placeholder="생년월일 8자리(필수입력)"> </td>
-				</tr>
-				<tr>
-					<th>연락처</th>				
-					<td><input type="text" name="phone" placeholder="010-1234-5678(필수입력)" id="phone"> </td>
-				</tr>
-				<tr>
-					<th>이메일</th>				
-					<td><input type="email" name="mail" id="mail" pattern=".+@gmail\.com" placeholder="example@gmail.com" required>
-						<span id="emailChk"></span> </td>
-				</tr>
-				<tr>
-					<th>성별</th>				
-					<td>
-						<input type="radio" name="gender" value="남" id="male" checked="checked">남
-						<input type="radio" name="gender" value="여" id="female">여 
-					</td>
-				</tr>
-				<tr>
-					<th>국적</th>				
-					<td><input type="text" name="nationality" id="naion" placeholder="대한민국(필수입력)"> </td>
-				</tr>
-			</table>
-				<input type="button" value="회원가입" id="signup-btn">
-				<input type="reset" value="취소">
-		</form>
+	<div id="body">
+		<div>
+			<%@include file="../include/logo.jsp"%>
+		</div>
+		<div>
+			<h2>회원가입</h2>
+			<form id="join_form" method="post" >
+				<table>
+					<tr>
+						<th>아이디</th>
+						<td><input type="text" name="u_writer" id="user_id"
+							class="form-control tooltipstered" maxlength="14"
+							required="required" aria-required="true"
+							placeholder="문자, 숫자포함(필수 입력)">
+							<span id="idCk"></span> </td>
+					</tr>
+					<tr>
+						<th>비밀번호 입력</th>
+						<td><input type="password" name="u_pw" id="password" placeholder="비밀번호 입력(필수입력)">
+							<span id="pwChk"></span> </td>
+					</tr>
+					<tr>
+						<th>비밀번호 확인</th>
+						<td><input type="password" name="u_pw" placeholder="비밀번호를 한번 더 입력해 주세요." id="password_check">
+							<span id="pwChk2"></span> </td>
+					</tr>
+					<tr>
+						<th>성명</th>
+						<td><input type="text" name="u_name" id="name" placeholder="이름입력 (필수입력)"> </td>
+					</tr>
+					<tr>
+						<th>생년월일</th>
+						<td><input type="text" name="birth" id="birth" placeholder="생년월일 8자리(필수입력)"> </td>
+					</tr>
+					<tr>
+						<th>연락처</th>
+						<td><input type="text" name="phone" placeholder="010-1234-5678(필수입력)" id="phone"> </td>
+					</tr>
+					<tr>
+						<th>이메일</th>
+						<td><input type="email" name="mail" id="mail" pattern=".+@gmail\.com" placeholder="example@gmail.com" required>
+							<span id="emailChk"></span> </td>
+					</tr>
+					<tr>
+						<th>성별</th>
+						<td>
+							<input type="radio" name="gender" value="남" id="male" checked="checked">남
+							<input type="radio" name="gender" value="여" id="female">여
+						</td>
+					</tr>
+					<tr>
+						<th>국적</th>
+						<td><input type="text" name="nationality" id="naion" placeholder="대한민국(필수입력)"> </td>
+					</tr>
+				</table>
+					<input type="button" value="회원가입" id="signup-btn">
+					<input type="reset" value="취소">
+			</form>
+		</div>
 	</div>
 </body>
 <script type="text/javascript">
+	window.onpageshow = function(event) {
+		if ( event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+			document.getElementById("join_form").reset();
+			$("#join_form span").html("");
+		}
+	}
+
+
 	// 회원가입 버튼 이벤트
 	/*
 	$(document).ready(function() {
@@ -142,6 +165,9 @@
     
  	// 2. PW 입력값 검증 -------------------------------------------------------------------------
   	$('#password').keyup(function() {
+
+
+
   		
   		// 비밀번호 공백 확인 
   		if ($(event.target).val() === ''){
@@ -198,7 +224,7 @@
    
 	//회원가입
 	    // 사용자가 회원 가입 버튼을 눌렀을 때의 이벤트 처리 
-      	$('#signup-btn').click(function() {
+      	$('#signup-btn').click(function (elementId) {
 		// input 공백 체크 -----------------------------------------  
       		if($('#user_id').val() == ""){
 				alert("아이디를 입력해주세요.");
@@ -258,16 +284,16 @@
       		if(chk1 && chk2 && chk3 && chk4 && chk5 && chk6 && chk7 && chk8 && chk9){
       			// 모두 true라면
       			// 입력값이 모두 제약조건을 통과했다는 뜻 
-      			
-      			var id = $('#user_id').val();// 아이디 정보 
-      			var pw = $('#password').val();// 비밀번호 정보 
-      			var name = $('#name').val();// 이름 정보 
+
+      			var id = $('#user_id').val();// 아이디 정보
+      			var pw = $('#password').val();// 비밀번호 정보
+      			var name = $('#name').val();// 이름 정보
       			var birth = $('#birth').val();
       			var phone = $('#phone').val();
       			var mail = $('#mail').val();
-      			var gender = $('#gender').val();
+      			var gender = document.getElementById("join_form").gender.value;
       			var nationality = $('#naion').val();
-      			
+
       			/*alert(id);
       			alert(pw);
       			alert(name);
@@ -276,7 +302,7 @@
       			alert(mail);
       			alert(gender);
       			alert(nationality);*/
-      			
+
    				// 여러개의 값을 보낼 때는 객체로 포장해서 전송해야함
    				// 객체의 property이름은 VO 객체의 변수명과 동일하게 (커맨드 객체 사용하기 위해)
       			var user = {
@@ -290,7 +316,10 @@
       					'nationality' : nationality
       			};
       			// 아직은 js객체이므로 JSON으로 변환해서 ajax의 data에 넣어야함
-      			
+
+
+				// 장동완 : json 으로 넣는것도 가능하지만 form데이터 자체를 보낼수도 있음 $(f).serialize()
+				// 하지만 원본을 거의 건들지 않은 상황에서 수정할 예정
       			$.ajax({
       				type:'POST',
       				url:'/user/join',
@@ -303,7 +332,7 @@
 						// 서버에서 다시 값을 보내면 result에 들어감
 						console.log('통신 성공 : ' + result);
 						alert("회원가입 되었습니다.");
-						location.href = '/user/login';
+						location.href = '/user/loginPage';
 					}, 
 					error : function(){
 						alert("회원가입 실패");

@@ -104,7 +104,16 @@ public class MainController {
 
 		return "country/countryWrite";
 	}
-	
+
+	// 세부대륙 검색결과 가져오기
+	@GetMapping("/countrySearch/{details_continent}")
+	public  String countrySearch(Model model, @PathVariable String details_continent) {
+
+		model.addAttribute("countryList",service.countrySearch(details_continent));
+		model.addAttribute("details_continent",details_continent);
+
+		return "country/countrySearch";
+	}
 
 
 

@@ -4,6 +4,8 @@ package org.worldfinder.mapper;
 import org.springframework.stereotype.Repository;
 import org.worldfinder.domain.UserVO;
 
+import java.util.List;
+
 @Repository
 public interface UserMapper {
 	
@@ -18,10 +20,10 @@ public interface UserMapper {
 	public int loginCheck(UserVO vo);
 	
 	// 로그인 get
-	public UserVO getUser(UserVO vo);
+	public UserVO getUser(String u_writer);
 	
 	// 아이디찾기
-	public UserVO findId(UserVO vo1);
+	public List<String> findId(UserVO vo1);
 
 
 

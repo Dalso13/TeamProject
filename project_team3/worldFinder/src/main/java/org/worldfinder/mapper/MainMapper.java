@@ -39,4 +39,7 @@ public interface MainMapper {
 
     // 나라게시글 삭제
     public  int deleteCountry(String country);
+
+    // 세부대륙 검색 결과 가져오기
+    public  List<String> countrySearch(String details_continent);
 }

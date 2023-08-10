@@ -5,6 +5,8 @@ import javax.servlet.http.HttpSession;
 
 import org.worldfinder.domain.UserVO;
 
+import java.util.List;
+
 public interface UserService {
 	
 	// 회원가입
@@ -15,15 +17,13 @@ public interface UserService {
 
 	// 로그인체크
 	public int loginCheck(UserVO vo);
-	
-	// 로그인get
-	public UserVO getUser(UserVO vo);
+
 	
 	// 로그아웃
 	public void logout(HttpSession session);
 
 	// 아이디찾기
-	public UserVO findId(UserVO vo);
+	public List<String> findId(UserVO vo);
 	
 	
 }

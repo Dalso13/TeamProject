@@ -8,21 +8,34 @@
 <title>Insert title here</title>
 </head>
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<link rel="stylesheet" href="../../../resources/css/base.css">
+<style>
+	#body div{
+		text-align: center;
+	}
+	table {
+		text-align: center;
+		margin: auto;
+	}
+</style>
 <body>
+<%--중간부터 장동완 진행--%>
+<div id="body">
 	<div>
 		<%@include file="../include/logo.jsp"%>
 	</div>
 	<div>
 		<h2>Login</h2>
-		<form method="post" id="loginForm">
+		<form role="form" method="post" action="/login"  id="loginForm">
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csfr.token }">
 			<table>
 				<tr>
-					<td><input type="text" name="u_writer" placeholder="아이디" id="signInId" >
-					<span id="idCheck"></span></td>
+					<td><input type="text" name="username" placeholder="아이디" id="signInId" >
+						<span id="idCheck"></span></td>
 				</tr>
 				<tr>
-					<td><input type="password" name="u_pw" placeholder="비밀번호" id="signInPw">
-					<span id="pwCheck"></span></td>
+					<td><input type="password" name="password" placeholder="비밀번호" id="signInPw">
+						<span id="pwCheck"></span></td>
 				</tr>
 				<tr>
 					<td>
@@ -32,28 +45,30 @@
 				<tr>
 					<td colspan="2" align="left">
 						<button type="button" id="signIn-btn" value="로그인">로그인</button>
-					<c:if test="${user == 'faile' }">
-						<div style="color: red">
-							아이디 또는 비밀번호가 일치하지 않습니다.
-						</div>
-					</c:if>	
-					<c:if test="${user == 'logout'}">
-						<div style="color: red">
-							로그아웃되었습니다.
-						</div>
-					</c:if>	
+						<c:if test="${user == 'faile' }">
+							<div style="color: red">
+								아이디 또는 비밀번호가 일치하지 않습니다.
+							</div>
+						</c:if>
+						<c:if test="${user == 'logout'}">
+							<div style="color: red">
+								로그아웃되었습니다.
+							</div>
+						</c:if>
 						<button type="button" id="goJoin" value="회원가입" onClick="location.href='/user/joinPage'">회원가입</button>
 					</td>
 				</tr>
-					 <tr>
+				<tr>
 					<td colspan="2" align="center">
 						<a href="/user/idFindPage" class="btnIdP">아이디  찾기</a>
 						<a href="/user/pwFind" class="btnPwP">비밀번호  찾기</a>
 					</td>
 				</tr>
-			</table>		
+			</table>
 		</form>
 	</div>
+</div>
+
 </body>
 <script type="text/javascript">
 	// 로그인
@@ -71,7 +86,6 @@
 				$("#signInPw").focus
 				return;
 			}
-			$('#loginForm').attr("action", "/user/login");
 			$("#loginForm").submit();
 		});
 	});

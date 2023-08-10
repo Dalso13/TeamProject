@@ -7,17 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.worldfinder.domain.UserVO;
 import org.worldfinder.service.UserService;
 
 import lombok.extern.log4j.Log4j;
+
+import java.util.List;
 
 
 @Log4j
@@ -76,39 +75,34 @@ public class UserController {
 	
 	// 로그인 페이지 이동
 	@RequestMapping(value = "/loginPage", method = RequestMethod.GET)
-	public void joinGet() {
+	public void joinGet(String error, String logout, Model model) {
+
+		log.info("error : " + error);
+		log.info("logout : " + logout);
+
+		if (error != null) {
+			model.addAttribute("error", "Login Error Check your Account");
+		}
+		if (logout != null) {
+			model.addAttribute("logout", "Logout!!");
+		}
+
+
 		log.info("로그인 페이지 진입");
-		}
-		
-	// 로그인 
-	@PostMapping(value="/login")
-	public String login(UserVO vo, HttpServletRequest request) {
-		log.info("로그인..." + vo);
-		session = request.getSession();	// 세션 생성
-		int login = userservice.loginCheck(vo);	// loginCheck : u_writer count
-		request.setAttribute("login", login);
-		
-		if(login > 0) {	// count 했을때, 있으면 
-			session.setAttribute("user", userservice.getUser(vo));	// getUser : vo 상세정보
-		}
-		return "user/login";
 	}
+
 	
-	/*
+
 	// 로그아웃
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logout(HttpSession session, HttpServletRequest request) {
-		
-		log.info("로그아웃 진입....");
-		
-		session = request.getSession();
-		
-		session.invalidate();
-	
-		return "main/index";
+	public String logout() {
+
+
+		return "/user/loginPage";
+
 	
 	}
-	*/
+
 	// 아이디 찾기 페이지 이동
 	@RequestMapping(value = "/idFindPage", method = RequestMethod.GET)
 	public void goIdFind() {
@@ -116,28 +110,29 @@ public class UserController {
 		}
 	
 	// 아이디찾기
-	@PostMapping("/idFind")
-	public String idFind(HttpServletRequest request, Model model, UserVO vo) {
-		log.info("아이디찾기...");
+	@PostMapping(value = "/idFind", produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String idFind( UserVO vo) {
+		log.info("아이디찾기... : " + vo.toString());
+
+		List<String> user = userservice.findId(vo);
 		
-		UserVO user = userservice.findId(vo);
-		
-		if(user == null) {
-			model.addAttribute("check", 1);
+		if(user.isEmpty()) {
+			return "fail";
 		}else {
-			model.addAttribute("check", 0);
-			model.addAttribute("name", user.getU_name());
-		
+			return user.toString();
 		}
-		
-		return "/user/idFind";
-		
 	}
 	
 	// 아이디찾기 결과
-	
 
-
+	// 접근 제한 처리
+	@GetMapping("/accessError")
+	public String accessDenied(Authentication auth, Model model) {
+		log.info("access Denied : " + auth );
+		model.addAttribute("msg", "Access Denied");
+		return "/main/accessError";
+	}
 	
 	
 	
