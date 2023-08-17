@@ -24,6 +24,11 @@ public interface UserMapper {
 	
 	// 아이디찾기
 	public List<String> findId(UserVO vo1);
+	// 비밀번호 찾기
+	public String findPw(UserVO vo);
+
+	// 비밀번호 변경
+	public int changePw(UserVO vo);
 
 
 

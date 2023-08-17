@@ -1,8 +1,9 @@
 package org.worldfinder.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +17,8 @@ import org.worldfinder.service.UserService;
 
 import lombok.extern.log4j.Log4j;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Log4j
@@ -115,16 +117,48 @@ public class UserController {
 	public String idFind( UserVO vo) {
 		log.info("아이디찾기... : " + vo.toString());
 
-		List<String> user = userservice.findId(vo);
+		String user = userservice.findId(vo);
 		
-		if(user.isEmpty()) {
-			return "fail";
+		if(user.equals("")) {
+			return "";
 		}else {
-			return user.toString();
+			return user;
 		}
 	}
-	
-	// 아이디찾기 결과
+	// 비밀번호 찾기 페이지 이동
+	@GetMapping("/pwFindPage")
+	public String goPwFindPage() {
+		
+		log.info("비밀번호 찾기 페이지 진입");
+		return "/user/pwFindPage";
+	}
+	// 비밀번호 찾기
+	@PostMapping(value = "/pwFindPage", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String  pwFindPage(UserVO vo) {
+		log.info("비밀번호찾기... : " + vo.toString());
+		Gson gson = new Gson();
+		String json = gson.toJson(userservice.findPw(vo));
+		;
+		return json;
+
+	}
+	// 비밀번호 변경 페이지
+	@GetMapping("/pwFind")
+	public String goPwFind(UserVO vo, Model model) {
+
+		model.addAttribute("vo",vo);
+		log.info("비밀번호 찾기 페이지 진입");
+		return "/user/pwFind";
+	}
+	// 비밀번호 변경
+	@PutMapping( value = "/pwFind", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String pwFind(UserVO vo){
+		Gson gson = new Gson();
+		return gson.toJson(userservice.changePw(vo));
+
+	}
 
 	// 접근 제한 처리
 	@GetMapping("/accessError")

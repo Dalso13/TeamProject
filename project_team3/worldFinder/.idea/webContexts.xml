@@ -6,6 +6,7 @@
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/include/itemFilter.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/include" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/main/admin.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/main" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/main/index.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/main" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/user/pwFind.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/user" />
       </map>
     </option>
   </component>

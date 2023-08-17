@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 import org.worldfinder.domain.UserVO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 	
@@ -23,7 +24,11 @@ public interface UserService {
 	public void logout(HttpSession session);
 
 	// 아이디찾기
-	public List<String> findId(UserVO vo);
+	public String findId(UserVO vo);
+	// 비밀번호 찾기
+	public Map<String,Boolean> findPw(UserVO vo);
+	// 비밀번호 변경
+	public Map<String,Boolean> changePw(UserVO vo);
 	
 	
 }

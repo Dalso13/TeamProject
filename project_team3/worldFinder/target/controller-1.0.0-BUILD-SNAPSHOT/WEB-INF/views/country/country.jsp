@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,7 +24,15 @@
             </c:when>
             <c:otherwise>
                 <h1>${countryPage.country} 둘러보기</h1>
-                <button id="modify">수정</button>
+                <sec:authorize access="hasAuthority('user')">
+                    <button id="modify">수정</button>
+                    <script>
+                        $("#modify").on('click',()=>{
+                            location.href = "/country/modify/${countryPage.country}";
+                        })
+                    </script>
+                </sec:authorize>
+
                 <span>
                     <button>호텔</button>
                     <button>맛집</button>
@@ -62,10 +71,6 @@
 
         document.getElementById("titleImg").innerHTML =
             `<img src="/country/viewImg?filename=\${encodeURIComponent(imgEncodeUrl)}" width="300px">`;
-
-        $("#modify").on('click',()=>{
-            location.href = "modify/${countryPage.country}";
-        })
     </script>
 
 </body>

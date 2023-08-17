@@ -146,7 +146,7 @@ pageEncoding="UTF-8"%>
               return;
           } else {
             alert("수정 되었습니다")
-            location.href = `/country/${countryPage.country}`;
+            location.replace(`/country/${countryPage.country}`);
          }
         }
       })
@@ -170,7 +170,7 @@ pageEncoding="UTF-8"%>
             return;
           } else {
             alert("삭제 되었습니다")
-            location.href = "/";
+            location.replace("/");
           }
         }
       })

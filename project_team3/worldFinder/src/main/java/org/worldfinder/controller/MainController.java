@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,7 @@ public class MainController {
 
 		return "main/index";
 	}
-
+	// 건의사항 페이지 처리
 	@GetMapping("/request")
 	public String requestPage() {
 		return "main/request";
@@ -62,7 +63,7 @@ public class MainController {
 
 		return "main/request_clear";
 	}
-
+	// 관리자 페이지 이동
 	@GetMapping("/adminPage")
 	public String adminPage(Model model, Criteria cri) {
 
@@ -80,7 +81,7 @@ public class MainController {
 
 		return "country/country";
 	}
-
+	// 나라 페이지 수정
 	@GetMapping("/country/modify/{country}")
 	public String countryModify(@PathVariable String country,Model model) {
 
@@ -89,6 +90,7 @@ public class MainController {
 
 		return "country/countryModify";
 	}
+	// 나라 작성페이지
 	@GetMapping("/countryWrite")
 	public String countryWrite(Model model) {
 

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,8 +23,37 @@
 </head>
 <body>
     <div id="body">
-        <span id="join"> <button id="login">로그인</button>  <button id="joinPage">회원가입</button>  <button id="adminGo">관리자 페이지 (임시)</button>
-        <button id="requestGo">건의사항 페이지 (임시)</button> <button id="writeGO">나라게시글 작성 (임시)</button> </span><br>
+        <span id="join">
+            <sec:authorize access="isAnonymous()">
+                <button id="login">로그인</button>
+                <button id="joinPage">회원가입</button>
+                <script>
+                    document.getElementById("login").onclick = function () {
+                        location.href = "/user/loginPage";
+                    }
+                    document.getElementById("joinPage").onclick = function () {
+                        location.href = "/user/joinPage";
+                    }
+                </script>
+            </sec:authorize>
+            <sec:authorize access="isAuthenticated()">
+                <button id="logout">로그아웃</button>
+                <button id="myPage">마이페이지</button>
+            </sec:authorize>
+            <sec:authorize access="hasAuthority('user')">
+                <button id="adminGo">관리자 페이지 (임시)</button>
+                <button id="writeGO">나라게시글 작성 (임시)</button>
+                <script>
+                    document.getElementById("adminGo").onclick = function () {
+                        location.href = "/adminPage";
+                    }
+                    document.getElementById("writeGO").onclick = function () {
+                        location.href = "/countryWrite";
+                    }
+                </script>
+            </sec:authorize>
+             <button id="requestGo">건의사항 페이지 (임시)</button>
+        </span><br>
        <img src="../../../resources/image/logo.jpg"  id="logo"/>
             <div id="sch">
                 <input type="text" name="search" placeholder="알고싶은 나라"
@@ -221,6 +251,18 @@
     <%--이미지 맵에 하이라이트 걸어줌--%>
     <script type="text/javascript" src="http://davidlynch.org/projects/maphilight/jquery.maphilight.min.js"></script>
     <script>
+        // $('img[usemap]').rwdImageMaps();
+        $(function() {
+            $('#worldMap area').on('click', function () {
+                continentView($(this).attr('alt'))
+
+            });
+            $(".continentImg area").on('click',function () {
+                smallContinentView($(this).attr('alt'))
+            })
+        });
+    </script>
+    <script>
         $.fn.maphilight.defaults = {
             fill: true,  //이미지맵 링크에 마우스가 올라오면 색을 넣을 건지 여부
             fillColor: 'a3d1eb',  // 색상지정
@@ -233,19 +275,6 @@
         // 만약 이미지 맵이 숨김처리 되있으면 인식을 못함
         $('img[usemap]').maphilight();
     </script>
-    <script>
-        $('img[usemap]').rwdImageMaps();
-        $(function() {
-            $('#worldMap area').on('click', function () {
-                continentView($(this).attr('alt'))
-
-            });
-            $(".continentImg area").on('click',function () {
-                smallContinentView($(this).attr('alt'))
-            })
-        });
-    </script>
-
     <script>
         // 대륙 클릭시
         function continentView(a) {
@@ -271,7 +300,7 @@
             continent.show();
             continent.attr("name", "now");;
             // 이것도 hide hidden 처리는 인식을 못해서 할때마다 선언
-            $('img[usemap]').rwdImageMaps();
+            // $('img[usemap]').rwdImageMaps();
         }
 
         // 세부대륙 클릭시 근데 하위 나라정보가 있을때
@@ -292,7 +321,7 @@
             }
             $(".continentImg").hide();
             sum.show();
-            $('img[usemap]').rwdImageMaps();
+            // $('img[usemap]').rwdImageMaps();
         }
 
         // 뒤로가기 버튼 클릭시
@@ -308,7 +337,7 @@
                 $("[name='now']").show();
                 $(".smallContinentImg").hide();
             }
-            $('img[usemap]').rwdImageMaps();
+            // $('img[usemap]').rwdImageMaps();
         })
     </script>
     <script>

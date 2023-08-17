@@ -13,7 +13,9 @@ import org.worldfinder.mapper.UserMapper;
 
 import lombok.extern.log4j.Log4j;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Log4j
 @Service
@@ -23,6 +25,7 @@ public class UserServiceImpl implements UserService {
 
 	@Setter(onMethod_= @Autowired )
 	private PasswordEncoder pwencoder;
+
 	
 	@Override
 	public int userJoin(UserVO vo){
@@ -53,11 +56,45 @@ public class UserServiceImpl implements UserService {
 	
 	// 아이디찾기
 	@Override
-	public List<String> findId(UserVO vo) {
-		return usermapper.findId(vo);
+	public String findId(UserVO vo) {
+		String result = "";
+		List<String> vos = usermapper.findId(vo);
+		if (vos.size() > 0) {
+			for (String sum :
+					vos) {
+				result += sum + ",";
+			}
+			result = result.substring(0,result.length()-1);
+		}
+
+		return result;
 	}
-	
-	
+
+	@Override
+	public Map<String,Boolean> findPw(UserVO vo) {
+		Map<String,Boolean> result = new HashMap<>();
+		result.put("result",false);
+
+		if (usermapper.findPw(vo) != null){
+			result.put("result",true);
+		}
+		return result;
+	}
+
+	// 비밀번호 변경
+	@Override
+	public Map<String,Boolean> changePw(UserVO vo) {
+		Map<String,Boolean> result = new HashMap<>();
+		result.put("result",false);
+		vo.setU_pw(pwencoder.encode(vo.getU_pw()));
+
+
+		if (usermapper.changePw(vo) > 0){
+			result.put("result",true);
+		}
+		return result;
+	}
+
 
 }
 		

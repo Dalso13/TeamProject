@@ -36,6 +36,17 @@
 	<select id="findId" resultType="String">
 		select U_WRITER from user_table3 where u_name=#{u_name} and phone=#{phone} and mail=#{mail}
 	</select>
+	<!--비밀번호 확인-->
+	<select id="findPw" resultType="String">
+		select u_pw from user_table3 where U_WRITER=#{u_writer} and phone=#{phone} and mail=#{mail}
+	</select>
+
+	<!--비밀번호 찾기가 안되기에 변경-->
+	<update id="changePw" parameterType="org.worldfinder.domain.UserVO">
+		update USER_TABLE3
+		set U_PW = #{u_pw}
+		where U_WRITER = #{u_writer}
+	</update>
 
 
 	<resultMap type="org.worldfinder.domain.UserVO" id="memberMap">
