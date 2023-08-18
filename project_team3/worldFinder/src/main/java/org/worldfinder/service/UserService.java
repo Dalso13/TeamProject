@@ -29,6 +29,9 @@ public interface UserService {
 	public Map<String,Boolean> findPw(UserVO vo);
 	// 비밀번호 변경
 	public Map<String,Boolean> changePw(UserVO vo);
+
+	// 회원 정보 수정
+	public Map<String,Boolean> userModify(UserVO vo);
 	
 	
 }

@@ -25,12 +25,27 @@
 		<form method="get" id='inform' action="/user/pwFind">
 			<table>
 				<tr>
+					<th>아이디</th>
 					<td><input type="text" name="u_writer" placeholder="아이디 입력"></td>
 				</tr>
 				<tr>
-					<td><input type="text" name="phone" placeholder="연락처 입력"><br> 
-						<input type="email" name="mail" placeholder="이메일 입력"> </td>
-				</tr> 
+					<th>휴대전화</th>
+					<td>
+						<input type="text"   class="phone" maxlength="3" style="width: 50px"> -
+						<input type="text"   class="phone" maxlength="4" style="width: 50px"> -
+						<input type="text"   class="phone" maxlength="4" style="width: 50px">
+						<input type="hidden" name="phone" id="phone">
+
+					</td>
+				</tr>
+				<tr>
+					<th>이메일</th>
+					<td>
+						<input type="text" class="mail" style="width: 100px" required> @
+						<input type="text"  class="mail" style="width: 100px" required>
+						<input type="hidden" name="mail" id="mail">
+					</td>
+				</tr>
 				
 
 			</table>
@@ -40,7 +55,9 @@
 
 	<script type="text/javascript">
 		const inform = document.getElementById("inform");
-
+		const phones = document.querySelectorAll(".phone");
+		const phoneRule =  /^(01[016789]{1})-[0-9]{4}-[0-9]{4}$/;
+		const getMailCheck = /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 		document.getElementById("fBtn").onclick = function() {
 
 			if (inform.u_writer.value == "") {
@@ -48,15 +65,33 @@
 				inform.u_writer.focus();
 				return;
 			}
-			if (inform.phone.value == "") {
-				alert("전화번호를 입력하세요.");
-				inform.phone.focus();
+			if(phones[0].value == "" || phones[1].value == "" || phones[2].value == ""){
+				alert("연락처를 입력해주세요.");
+				return;
+			} else {
+				document.getElementById("phone").value = phones[0].value +"-"+  phones[1].value +"-"+ phones[2].value;
+			}
+			let result = document.getElementById("phone").value;
+			if (!phoneRule.test(result)){
+				alert("연락처를 올바르게 입력해주세요.");
 				return;
 			}
-			if (inform.mail.value == "") {
-				alert("이메일을 입력하세요.");
-				inform.mail.focus();
+			const mails = document.querySelectorAll(".mail");
+			const chkMail = document.getElementById("mail");
+
+			if(mails[0].value == "" || mails[1].value == ""){
+				alert("메일주소를 입력해주세요.");
 				return;
+			} else {
+				chkMail.value = mails[0].value + "@" + mails[1].value;
+			}
+
+			if (!getMailCheck.test(chkMail.value)){
+				alert("메일주소를 올바르게 입력해주세요.")
+				mails[0].focus();
+				return;
+			} else {
+				chk7 = true;
 			}
 
 			let formData = new FormData(inform);

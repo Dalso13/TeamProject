@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -159,12 +160,26 @@ public class UserController {
 		return gson.toJson(userservice.changePw(vo));
 
 	}
+	
+	// 회원 정보 수정 페이지
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping(value = "/userModify")
+	public String userModify(UserVO vo, Model model){
+		model.addAttribute("vo",vo);
+		return "/user/userModify";
+	}
+	// 회원 정보 수정 처리
+	@PutMapping(value = "/userModify" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String userModify(UserVO vo){
+		Gson gson = new Gson();
+		return gson.toJson(userservice.userModify(vo));
+	}
 
 	// 접근 제한 처리
 	@GetMapping("/accessError")
-	public String accessDenied(Authentication auth, Model model) {
+	public String accessDenied(Authentication auth) {
 		log.info("access Denied : " + auth );
-		model.addAttribute("msg", "Access Denied");
 		return "/main/accessError";
 	}
 	

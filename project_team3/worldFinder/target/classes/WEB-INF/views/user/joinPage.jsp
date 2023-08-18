@@ -12,6 +12,8 @@
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <link rel="stylesheet" href="../../../resources/css/base.css">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <style>
 	#body div{
 		text-align: center;
@@ -20,7 +22,7 @@
 		text-align: center;
 		margin: auto;
 	}
-	tr span {
+	#idCk, #pwChk, #pwChk2{
 		position: absolute;
 	}
 </style>
@@ -43,12 +45,12 @@
 					</tr>
 					<tr>
 						<th>비밀번호 입력</th>
-						<td><input type="password" name="u_pw" id="password" placeholder="비밀번호 입력(필수입력)">
+						<td><input type="password" name="u_pw" id="password" placeholder="비밀번호 입력(필수입력)" maxlength="24">
 							<span id="pwChk"></span> </td>
 					</tr>
 					<tr>
 						<th>비밀번호 확인</th>
-						<td><input type="password" name="u_pw" placeholder="비밀번호를 한번 더 입력해 주세요." id="password_check">
+						<td><input type="password" name="u_pw" placeholder="비밀번호를 한번 더 입력해 주세요." id="password_check" maxlength="24">
 							<span id="pwChk2"></span> </td>
 					</tr>
 					<tr>
@@ -57,15 +59,25 @@
 					</tr>
 					<tr>
 						<th>생년월일</th>
-						<td><input type="text" name="birth" id="birth" placeholder="생년월일 8자리(필수입력)"> </td>
+						<td>
+							<input type="text" name="birth" id="datepicker" >
+						</td>
 					</tr>
 					<tr>
-						<th>연락처</th>
-						<td><input type="text" name="phone" placeholder="010-1234-5678(필수입력)" id="phone"> </td>
+						<th>휴대전화</th>
+						<td>
+							<input type="text"   class="phone" maxlength="3" style="width: 50px"> -
+							<input type="text"   class="phone" maxlength="4" style="width: 50px"> -
+							<input type="text"   class="phone" maxlength="4" style="width: 50px">
+							<input type="hidden" name="phone" id="phone">
+						</td>
 					</tr>
 					<tr>
 						<th>이메일</th>
-						<td><input type="email" name="mail" id="mail" pattern=".+@gmail\.com" placeholder="example@gmail.com" required>
+						<td>
+							<input type="text" class="mail" style="width: 100px" required> @
+							<input type="text"  class="mail" style="width: 100px" required>
+							<input type="hidden" name="mail" id="mail">
 							<span id="emailChk"></span> </td>
 					</tr>
 					<tr>
@@ -86,6 +98,28 @@
 		</div>
 	</div>
 </body>
+<script>
+	$(function() {
+		// 날짜 api 사용
+		//input을 datepicker로 선언
+		$("#datepicker").datepicker({
+			dateFormat: 'yy-mm-dd' //달력 날짜 형태
+			,showMonthAfterYear:true // 월- 년 순서가아닌 년도 - 월 순서
+			,changeYear: true //option값 년 선택 가능
+			,changeMonth: true //option값  월 선택 가능
+			,yearSuffix: "년" //달력의 년도 부분 뒤 텍스트
+			,monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 텍스트
+			,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip
+			,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 텍스트
+			,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 Tooltip
+			,minDate: "-100Y" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+			,maxDate: "-1D" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)
+		});
+
+		//초기값을 오늘 날짜로 설정해줘야 합니다.
+		$('#datepicker').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
+	});
+</script>
 <script type="text/javascript">
 	window.onpageshow = function(event) {
 		if ( event.persisted || (window.performance && window.performance.navigation.type == 2)) {
@@ -106,11 +140,12 @@
 	});
 	*/
 	// 아이디 중복 체크-----------------------------------------------------------------------------
-	$(function() {
+	$(function (string) {
     //각 입력값들의 유효성 검증을 위한 정규표현식을 변수로 선언.
        var getIdCheck = /^[0-9a-z]{8,16}$/;		
        var getPwCheck = RegExp(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~])|([!,@,#,$,%,^,&,*,?,_,~].*[a-zA-Z0-9])/);
-       var getMailCheck = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+       var getMailCheck = /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+		var phoneRule =  /^(01[016789]{1})-[0-9]{4}-[0-9]{4}$/;
        
     // 입력값 중 하나라도 만족하지 못한다면 회원가입 처리를 막기위한 논리형 변수 선언.
    	 var chk1 = false, chk2 = false, chk3 = false, // 아이디, 비번, 비번확인
@@ -172,7 +207,7 @@
   		// 비밀번호 공백 확인 
   		if ($(event.target).val() === ''){
   			$(event.target).css('background', 'skyblue');
-			$('#pwChk').html('<b style="font-size: 14px; color:blue">[비밀번호를 입력해주세요]</b>');
+			$('#pwChk').html('<b style="font-size: 14px; color:red">[비밀번호를 입력해주세요]</b>');
 			chk2 = false;
 			// 입력했다가 다시 잘못입력할 수 있으므로 모든 조건식에 넣어야함
   		}
@@ -244,31 +279,51 @@
 			}else {
 				chk3 = true;
 			}
-		
+
 			if($('#name').val() == ""){
 				alert("이름을 입력해주세요.");
 				return;
 			}else {
 				chk4 = true;
 			}
-		
-			if($('#birth').val() == ""){
+			if($('#datepicker').val() == "") {
 				alert("생년월일을 입력해주세요.");
 				return;
-			}else {
+			} else {
 				chk5 = true;
 			}
-			if($('#phone').val() == ""){
+
+			const phones = document.querySelectorAll(".phone");
+
+			if(phones[0].value == "" || phones[1].value == "" || phones[2].value == ""){
 				alert("연락처를 입력해주세요.");
+				return;
+			} else {
+				document.getElementById("phone").value = phones[0].value +"-"+  phones[1].value +"-"+ phones[2].value;
+			}
+			let result = document.getElementById("phone").value;
+			if (!phoneRule.test(result)){
+				alert("연락처를 올바르게 입력해주세요.");
 				return;
 			}else {
 				chk6 = true;
 			}
-			
-			if($('#mail').val() == ""){
+
+			const mails = document.querySelectorAll(".mail");
+			const chkMail = document.getElementById("mail");
+
+			if(mails[0].value == "" || mails[1].value == ""){
 				alert("메일주소를 입력해주세요.");
 				return;
-			}else {
+			} else {
+				chkMail.value = mails[0].value + "@" + mails[1].value;
+			}
+
+			if (!getMailCheck.test(chkMail.value)){
+				alert("메일주소를 올바르게 입력해주세요.")
+				mails[0].focus();
+				return;
+			} else {
 				chk7 = true;
 			}
 			
@@ -288,7 +343,7 @@
       			var id = $('#user_id').val();// 아이디 정보
       			var pw = $('#password').val();// 비밀번호 정보
       			var name = $('#name').val();// 이름 정보
-      			var birth = $('#birth').val();
+      			var birth = $("#datepicker").val();
       			var phone = $('#phone').val();
       			var mail = $('#mail').val();
       			var gender = document.getElementById("join_form").gender.value;

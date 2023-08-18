@@ -95,6 +95,17 @@ public class UserServiceImpl implements UserService {
 		return result;
 	}
 
+	@Override
+	public Map<String,Boolean> userModify(UserVO vo) {
+		Map<String,Boolean> result = new HashMap<>();
+		result.put("result",false);
+
+		if (usermapper.userModify(vo) > 0){
+			result.put("result",true);
+		}
+		return result;
+	}
+
 
 }
 		

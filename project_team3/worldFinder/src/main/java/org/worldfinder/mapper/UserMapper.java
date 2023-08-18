@@ -30,6 +30,9 @@ public interface UserMapper {
 	// 비밀번호 변경
 	public int changePw(UserVO vo);
 
+	// 회원 정보 수정
+	public int userModify(UserVO vo);
+
 
 
 	

@@ -74,4 +74,11 @@
 		where u_writer = #{u_writer}
 	</select>
 
+	<!--회원 정보 수정-->
+	<update id="userModify" parameterType="org.worldfinder.domain.UserVO">
+		update USER_TABLE3
+		set PHONE = #{phone} , MAIL = #{mail} , NATIONALITY = #{nationality}
+		where U_WRITER = #{u_writer}
+	</update>
+
 </mapper>

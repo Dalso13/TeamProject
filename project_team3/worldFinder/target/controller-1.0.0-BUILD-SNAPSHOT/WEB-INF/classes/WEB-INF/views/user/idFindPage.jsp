@@ -10,7 +10,7 @@
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <link rel="stylesheet" href="../../../resources/css/base.css">
 <style>
-	#body div{
+	#body div, h2{
 		text-align: center;
 	}
 	table {
@@ -19,10 +19,10 @@
 	}
 </style>
 <body>
-	<div>
-		<%@include file="../include/logo.jsp"%>
-	</div>
 	<div id="body">
+		<div>
+			<%@include file="../include/logo.jsp"%>
+		</div>
 		<h2>아이디 찾기</h2>
 		<form method="post" class="idFind" id='inform'>
 			<table>
@@ -32,11 +32,17 @@
 				</tr>
 				<tr class="form_group">
 					<th>연락처</th>				
-					<td><input type="text" name="phone" placeholder="010-1234-5678(필수입력)" id="phone"> </td>
+					<td><input type="text"   class="phone" maxlength="3" style="width: 50px"> -
+						<input type="text"   class="phone" maxlength="4" style="width: 50px"> -
+						<input type="text"   class="phone" maxlength="4" style="width: 50px">
+						<input type="hidden" name="phone" id="phone">
+					</td>
 				</tr>
 				<tr class="form_group">
 					<th>이메일</th>				
-					<td><input type="email" name="mail" id="mail" placeholder="(필수입력)"> </td>
+					<td><input type="text" class="mail" style="width: 100px" required> @
+						<input type="text"  class="mail" style="width: 100px" required>
+						<input type="hidden" name="mail" id="mail"> </td>
 				</tr>
 				<tr class="form-label-group">
 					<th> <input class="btn btn-lg btn-secondary btn-block text-uppercase" id="fBtn" type="button" value="아이디찾기" > </th>
@@ -74,7 +80,9 @@
 	</div>
 	<script type="text/javascript">
 		const inform = document.getElementById("inform");
-
+		const phones = document.querySelectorAll(".phone");
+		const phoneRule =  /^(01[016789]{1})-[0-9]{4}-[0-9]{4}$/;
+		const getMailCheck = /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 		document.getElementById("fBtn").onclick = function() {
 
 			if (inform.u_name.value == "") {
@@ -82,14 +90,31 @@
 				inform.u_name.focus();
 				return;
 			}
-			if (inform.phone.value == "") {
-				alert("전화번호를 입력하세요.");
-				inform.phone.focus();
+			if(phones[0].value == "" || phones[1].value == "" || phones[2].value == ""){
+				alert("연락처를 입력해주세요.");
+				return;
+			} else {
+				document.getElementById("phone").value = phones[0].value +"-"+  phones[1].value +"-"+ phones[2].value;
+			}
+			let result = document.getElementById("phone").value;
+			if (!phoneRule.test(result)){
+				alert("연락처를 올바르게 입력해주세요.");
 				return;
 			}
-			if (inform.mail.value == "") {
-				alert("이메일을 입력하세요.");
-				inform.mail.focus();
+
+			const mails = document.querySelectorAll(".mail");
+			const chkMail = document.getElementById("mail");
+
+			if(mails[0].value == "" || mails[1].value == ""){
+				alert("메일주소를 입력해주세요.");
+				return;
+			} else {
+				chkMail.value = mails[0].value + "@" + mails[1].value;
+			}
+
+			if (!getMailCheck.test(chkMail.value)){
+				alert("메일주소를 올바르게 입력해주세요.")
+				mails[0].focus();
 				return;
 			}
 

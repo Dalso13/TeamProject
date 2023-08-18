@@ -60,6 +60,7 @@
 		}
 	})
 
+
 	document.getElementById("fBtn").onclick = function() {
 		if (inform.u_pw.value == "") {
 			alert("비밀번호를 입력하세요.");
