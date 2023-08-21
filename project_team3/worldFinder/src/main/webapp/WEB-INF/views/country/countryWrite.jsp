@@ -66,7 +66,7 @@
     </div>
     <button id="sub">작성 완료</button> <button onclick="location.href = '/'">로비로</button>
 </div>
-<form id="realForm">
+<form id="realForm" style="display: none">
 
 </form>
 <script>

@@ -78,6 +78,7 @@ public class MainController {
 
 		model.addAttribute("countryPage",service.readCountryPage(country));
 		model.addAttribute("reCountry",country);
+		model.addAttribute("userPostList",null);
 
 		return "country/country";
 	}

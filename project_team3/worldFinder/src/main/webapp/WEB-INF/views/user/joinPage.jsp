@@ -13,6 +13,7 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <link rel="stylesheet" href="../../../resources/css/base.css">
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="../../../resources/css/buttonStyle.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <style>
 	#body div{
@@ -48,22 +49,22 @@
 						<td><input type="password" name="u_pw" id="password" placeholder="비밀번호 입력(필수입력)" maxlength="24">
 							<span id="pwChk"></span> </td>
 					</tr>
-					<tr>
+					<tr >
 						<th>비밀번호 확인</th>
 						<td><input type="password" name="u_pw" placeholder="비밀번호를 한번 더 입력해 주세요." id="password_check" maxlength="24">
 							<span id="pwChk2"></span> </td>
 					</tr>
-					<tr>
+					<tr  >
 						<th>성명</th>
 						<td><input type="text" name="u_name" id="name" placeholder="이름입력 (필수입력)"> </td>
 					</tr>
-					<tr>
+					<tr  >
 						<th>생년월일</th>
 						<td>
 							<input type="text" name="birth" id="datepicker" >
 						</td>
 					</tr>
-					<tr>
+					<tr  >
 						<th>휴대전화</th>
 						<td>
 							<input type="text"   class="phone" maxlength="3" style="width: 50px"> -
@@ -72,7 +73,7 @@
 							<input type="hidden" name="phone" id="phone">
 						</td>
 					</tr>
-					<tr>
+					<tr >
 						<th>이메일</th>
 						<td>
 							<input type="text" class="mail" style="width: 100px" required> @
@@ -80,7 +81,7 @@
 							<input type="hidden" name="mail" id="mail">
 							<span id="emailChk"></span> </td>
 					</tr>
-					<tr>
+					<tr >
 						<th>성별</th>
 						<td>
 							<input type="radio" name="gender" value="남" id="male" checked="checked">남
@@ -92,8 +93,8 @@
 						<td><input type="text" name="nationality" id="naion" placeholder="대한민국(필수입력)"> </td>
 					</tr>
 				</table>
-					<input type="button" value="회원가입" id="signup-btn">
-					<input type="reset" value="취소">
+				<button class="button button--ujarak button--border-thin button--text-thick" type="button"  id="signup-btn">회원가입</button>
+				<button class="button button--ujarak button--border-thin button--text-thick" type="reset" >취소</button>
 			</form>
 		</div>
 	</div>

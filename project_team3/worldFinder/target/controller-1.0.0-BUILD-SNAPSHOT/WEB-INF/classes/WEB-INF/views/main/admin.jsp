@@ -308,5 +308,9 @@
             paging.html(pageText)
         }
     </script>
+    <script>
+        userReport.style.display = "block";
+        reportAjax("유저","1");
+    </script>
 </body>
 </html>

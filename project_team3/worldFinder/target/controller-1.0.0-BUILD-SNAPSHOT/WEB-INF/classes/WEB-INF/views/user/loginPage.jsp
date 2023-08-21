@@ -9,6 +9,7 @@
 </head>
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <link rel="stylesheet" href="../../../resources/css/base.css">
+<link rel="stylesheet" href="../../../resources/css/buttonStyle.css">
 <style>
 	#body div{
 		text-align: center;
@@ -16,6 +17,9 @@
 	table {
 		text-align: center;
 		margin: auto;
+	}
+	a{
+		text-decoration: none;
 	}
 </style>
 <body>
@@ -43,8 +47,9 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="left">
-						<button type="button" id="signIn-btn" value="로그인">로그인</button>
+					<td colspan="2" >
+						<button class="button button--ujarak button--border-thin button--text-thick"
+								type="button" id="signIn-btn" value="로그인">로그인</button>
 						<c:if test="${user == 'faile' }">
 							<div style="color: red">
 								아이디 또는 비밀번호가 일치하지 않습니다.
@@ -55,13 +60,14 @@
 								로그아웃되었습니다.
 							</div>
 						</c:if>
-						<button type="button" id="goJoin" value="회원가입" onClick="location.href='/user/joinPage'">회원가입</button>
+						<button class="button button--ujarak button--border-thin button--text-thick"
+								type="button" id="goJoin" value="회원가입" onClick="location.href='/user/joinPage'">회원가입</button>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2" align="center">
-						<a href="/user/idFindPage" class="btnIdP">아이디  찾기</a>
-						<a href="/user/pwFindPage" class="btnPwP">비밀번호  찾기</a>
+						<a style="border: none;" class="button button--ujarak button--border-medium button--round-s button--text-thick" href="/user/idFindPage" class="btnIdP">아이디  찾기</a>
+						<a style="border: none;" class="button button--ujarak button--border-medium button--round-s button--text-thick" href="/user/pwFindPage" class="btnPwP">비밀번호  찾기</a>
 					</td>
 				</tr>
 			</table>

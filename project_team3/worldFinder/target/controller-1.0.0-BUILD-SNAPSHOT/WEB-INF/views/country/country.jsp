@@ -11,8 +11,60 @@
     <link rel="stylesheet" href="../../../resources/css/base.css">
     <style>
 
+        .btn {
+            border: none;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+            text-transform: uppercase;
+            outline: none;
+            overflow: hidden;
+            position: relative;
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            background-color: lightcoral;
+            padding: 10px 10px;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.20);
+        }
+
+        .btn span {
+            display: inline-block;
+            width: 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 250%;
+            width: 140%;
+            background: #78c7d2;
+            -webkit-transition: all .5s ease-in-out;
+            transition: all .5s ease-in-out;
+            -webkit-transform: translateX(-98%) translateY(-25%) rotate(45deg);
+            transform: translateX(-98%) translateY(-25%) rotate(45deg);
+        }
+
+        .btn:hover:after {
+            -webkit-transform: translateX(-9%) translateY(-25%) rotate(45deg);
+            transform: translateX(-9%) translateY(-25%) rotate(45deg);
+        }
 
     </style>
+    <style>
+        .userBox{
+            display: inline-block;
+            width: 30%;
+            height: 200px;
+            border: 1px solid black;
+        }
+    </style>
+    <link rel="stylesheet" href="../../../resources/css/buttonStyle.css">
 </head>
 <body>
     <%@include file="../include/logoSerach.jsp"%>
@@ -25,7 +77,7 @@
             <c:otherwise>
                 <h1>${countryPage.country} 둘러보기</h1>
                 <sec:authorize access="hasAuthority('user')">
-                    <button id="modify">수정</button>
+                    <button id="modify" class="button button--ujarak button--border-thin button--text-thick" >수정</button>
                     <script>
                         $("#modify").on('click',()=>{
                             location.href = "/country/modify/${countryPage.country}";
@@ -34,9 +86,9 @@
                 </sec:authorize>
 
                 <span>
-                    <button>호텔</button>
-                    <button>맛집</button>
-                    <button>관광지</button>
+                    <button id ="itemHotel" class="btn"> <span>호텔</span></button>
+                    <button id ="itemFood" class="btn"> <span>맛집</span></button>
+                   <button id ="itemView" class="btn"> <span>관광지</span></button>
                  </span>
                 <hr>
                 <div id="titleImg"></div>
@@ -50,16 +102,26 @@
                     <br>
                     <h1>유저 게시글</h1>
                     <div>
-                        <span>
-                            <%--이미지--%>
-                            <div>
-                                <div>제목</div>
-                                <div>작성자</div>
-                                <div>조회수</div>
-                                <div>좋아요수</div>
-                                <div>날짜</div>
-                            </div>
-                        </span>
+                        <c:choose>
+                            <c:when test="${empty userPostList}">
+                                <h3>작성된 유저게시글이 없습니다</h3>
+                            </c:when>
+                            <c:otherwise>
+                                <%--이미지--%>
+                                <c:forEach items="${userPostList}" var="user">
+                                    <span class="userBox">
+                                        <div>
+                                            <div>제목</div>
+                                            <div>작성자</div>
+                                            <div>조회수</div>
+                                            <div>좋아요수</div>
+                                            <div>날짜</div>
+                                        </div>
+                                    </span>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
+
                     </div>
 
                 </div>
@@ -71,6 +133,34 @@
 
         document.getElementById("titleImg").innerHTML =
             `<img src="/country/viewImg?filename=\${encodeURIComponent(imgEncodeUrl)}" width="300px">`;
+            // let itemLink;
+            // const items = document.querySelectorAll(".btn");
+            // items.forEach((e) =>{
+            //     e.onclick = function (s){
+            //         if (s.target.nodeName.toLowerCase() == 'span'){
+            //             alert(1)
+            //         }
+            //         switch (s.target.getAttribute("data-item")){
+            //             case "hotel" :itemLink = "/manager/item/itemList";
+            //                 break
+            //             case "food" : itemLink = "/manager/food/foodList";
+            //                 break
+            //             case "view" : itemLink = "/manager/item/itemList";
+            //                 break
+            //         }
+            //         // location.href = itemLink;
+            //     }
+            // })
+            document.getElementById("itemHotel").onclick = function () {
+                location.href = "/manager/item/itemList";
+            }
+            document.getElementById("itemFood").onclick = function () {
+                location.href = "/manager/food/foodList";
+            }
+            document.getElementById("itemView").onclick = function () {
+                location.href = "/manager/item/itemList";
+            }
+
     </script>
 
 </body>
