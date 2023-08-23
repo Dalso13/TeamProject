@@ -32,7 +32,6 @@
             width: 100%;
             height: 100%;
         }
-
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="../../../resources/css/base.css">
@@ -49,8 +48,8 @@
         <select id="county"></select>
     </div>
     <div id="imgBody">
-        <label for="input_image" id="realImage">대표 이미지 선택</label> <br>
-        <img style="width: 100px; margin-top: 10px" id="preview-image">
+        <label for="input_image" id="realImage" >대표 이미지 선택</label> <br>
+        <img style="height: 70px; margin-top: 10px" id="preview-image">
         <input type="file" name="emage" accept="image/*" id="input_image" style="display: none" >
         <input type="file"  accept="image/*" id="backUpImg" style="display: none">
     </div>

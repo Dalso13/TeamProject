@@ -3,6 +3,7 @@ package org.worldfinder.mapper;
 import org.apache.ibatis.annotations.Param;
 import org.worldfinder.domain.*;
 
+import java.nio.channels.Pipe;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public interface MainMapper {
     public  List<Map<String,String>> readfilter(@Param("filterValue") String filterValue , @Param("category") String category);
 
     // 페이지 카운트 세기
-    public  int getTotalCount();
+    public  int getTotalCount( @Param("category") String category);
 
     // 나라 페이지 업데이트
     public int countryModify(CountryVO vo);
@@ -42,4 +43,17 @@ public interface MainMapper {
 
     // 세부대륙 검색 결과 가져오기
     public  List<String> countrySearch(String details_continent);
+
+    public List<UserPostVO> userPostSample(String country);
+
+
+    public UserPostVO repPost(long idx);
+    public CommentVO repComment(long idx);
+    public NestedCVO repNestedC(long idx);
+
+    public List<Map<String,String>> repReason(ReportVO vo);
+    // 블라인드
+    public int blind(ReportVO vo);
+    // 블라인드
+    public int removeReport(ReportVO vo);
 }

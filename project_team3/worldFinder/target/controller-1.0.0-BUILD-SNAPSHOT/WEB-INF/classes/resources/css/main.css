@@ -64,7 +64,7 @@ img {
 }
 
 #focusSpan{
-    background-color: violet;
+    background-color: cornsilk;
 }
 #logo{
     display: block;
@@ -74,5 +74,5 @@ img {
     margin-left: 350px;
 }
 .clickSpan:hover{
-    background-color: violet;
+    background-color: cornsilk;
 }

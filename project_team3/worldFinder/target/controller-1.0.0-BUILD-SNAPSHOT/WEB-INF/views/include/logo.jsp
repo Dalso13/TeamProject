@@ -9,7 +9,10 @@
 </style>
 <span id="logo"><img src="../../../resources/image/logo.jpg" /></span>
 <script>
-    document.getElementById("logo").onclick = function () {
+    function homeGoLogo (){
         location.href = "/";
     }
+
+
+    document.getElementById("logo").addEventListener("click", homeGoLogo)
 </script>

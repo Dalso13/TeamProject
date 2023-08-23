@@ -57,11 +57,59 @@
 
     </style>
     <style>
-        .userBox{
+        .userBox {
+            cursor: pointer;
+            background-color: #78c7d2;
             display: inline-block;
-            width: 30%;
-            height: 200px;
-            border: 1px solid black;
+            width: 31%;
+            max-width: 31%;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.42, 0.0, 0.58, 1.0);
+        }
+
+        .userBox:hover {
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            transform: translateY(-10px);
+        }
+        .userBox * {
+            color: white;
+            padding: 10px;
+        }
+
+        .userBox .postImg {
+            display: block;
+            width: 100%;
+            padding: 0;
+        }
+        .userBox .heading {
+            font-size: 28px;
+        }
+
+        .userBox .postData {
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .userBox .postData span {
+            padding: 0;
+        }
+
+        .userBox .postData .postData {
+            margin-bottom: 2px;
+        }
+
+        .userBox .postData .postUserId {
+            font-size: 16px;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .userBox .postTexts {
+            font-size: 14px;
+            line-height: 18px;
         }
     </style>
     <link rel="stylesheet" href="../../../resources/css/buttonStyle.css">
@@ -101,32 +149,36 @@
                     <hr>
                     <br>
                     <h1>유저 게시글</h1>
-                    <div>
+                    <div id="postBody">
                         <c:choose>
-                            <c:when test="${empty userPostList}">
+                            <c:when test="${empty userPostSample}">
                                 <h3>작성된 유저게시글이 없습니다</h3>
                             </c:when>
                             <c:otherwise>
                                 <%--이미지--%>
-                                <c:forEach items="${userPostList}" var="user">
-                                    <span class="userBox">
-                                        <div>
-                                            <div>제목</div>
-                                            <div>작성자</div>
-                                            <div>조회수</div>
-                                            <div>좋아요수</div>
-                                            <div>날짜</div>
+                                <c:forEach items="${userPostSample}" var="user">
+                                    <span class="userBox" onclick="postGo(${user.up_idx})">
+                                        <img class="postImg" src="../../../resources/image/logo.jpg">
+                                        <h1 class="heading">${user.title}</h1>
+                                        <div class="postData">
+                                            <span class="postData">${user.reg_date}</span>
+                                            <span class="postUserId">${user.u_writer}</span>
                                         </div>
+                                        <div class="postTexts">${user.hit} ${user.up_like}</div>
                                     </span>
                                 </c:forEach>
                             </c:otherwise>
                         </c:choose>
 
                     </div>
-
+                    <div><button id="userPostOther" class="button button--ujarak button--border-medium button--round-s button--text-thick" >더보기</button></div>
                 </div>
             </c:otherwise>
         </c:choose>
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
     <script !src="">
         const imgEncodeUrl = '${countryPage.c_img}';
@@ -160,7 +212,12 @@
             document.getElementById("itemView").onclick = function () {
                 location.href = "/manager/item/itemList";
             }
-
+            document.getElementById("userPostOther").onclick = function () {
+                location.href = "/userPost/main";
+            }
+           function postGo(idx){
+                location.href = "/userPost/view?up_idx=" + idx;
+           }
     </script>
 
 </body>

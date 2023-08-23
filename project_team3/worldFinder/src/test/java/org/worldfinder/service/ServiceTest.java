@@ -11,7 +11,7 @@ import org.worldfinder.mapper.MainMapper;
 
 @Log4j
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:WEB-INF/spring/root-context.xml")
+@ContextConfiguration(locations = {"classpath*:WEB-INF/spring/root-context.xml","classpath*:WEB-INF/spring/security-context.xml"})
 public class ServiceTest {
 
     @Autowired
@@ -19,6 +19,6 @@ public class ServiceTest {
 
     @Test
     public void tests(){
-        service.readCountry();
+        service.getTotalCount("USER");
     }
 }

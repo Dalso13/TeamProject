@@ -78,7 +78,7 @@ public class MainController {
 
 		model.addAttribute("countryPage",service.readCountryPage(country));
 		model.addAttribute("reCountry",country);
-		model.addAttribute("userPostList",null);
+		model.addAttribute("userPostSample",service.userPostSample(country));
 
 		return "country/country";
 	}
@@ -152,7 +152,7 @@ public class MainController {
 		Map<String,Object> map = new HashMap<>();
 
 		map.put("requestVO",service.readRequest(cri));
-		map.put("reqPageMaker", new PageDTO(cri, service.getTotalCount()));
+		map.put("reqPageMaker", new PageDTO(cri, service.getTotalCount("request")));
 
 		return map;
 	}
@@ -187,10 +187,15 @@ public class MainController {
 
 		Criteria cri = new Criteria();
 		cri.setPageNum(Integer.parseInt(pageNum));
+		log.info("check");
+
 
 		Map<String,Object> map = new HashMap<>();
 		map.put("reportVO",service.readReport(category,cri));
-		map.put("reqPageMaker", new PageDTO(cri, service.getTotalCount()));
+		log.info("check1");
+		map.put("reqPageMaker", new PageDTO(cri, service.getTotalCount(category)));
+		log.info("check2");
+		log.info(map.toString());
 
 		return map;
 
@@ -296,4 +301,27 @@ public class MainController {
 	}
 
 
+	//신고 게시글, 댓글 가져오기
+	@PostMapping(value = "/admin/repPost", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String repPost(@RequestBody ReportVO rVo) {
+
+		return service.repPost(rVo);
+	}
+
+	//신고 사유 가져오기
+	@PostMapping(value = "/admin/repReason", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String repReason(@RequestBody ReportVO rVo) {
+
+		return service.repReason(rVo);
+	}
+
+	//blind 처리
+	@PostMapping(value = "/admin/blind", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String blind(@RequestBody ReportVO rVo) {
+
+		return service.blind(rVo);
+	}
 }

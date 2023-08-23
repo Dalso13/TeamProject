@@ -1,11 +1,13 @@
 package org.worldfinder.service;
 
+import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.worldfinder.domain.*;
 import org.worldfinder.mapper.MainMapper;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,8 +69,8 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
-    public int getTotalCount() {
-        return mapper.getTotalCount();
+    public int getTotalCount(String category) {
+        return mapper.getTotalCount(category);
     }
 
     // 나라 페이지 업데이트
@@ -92,5 +94,45 @@ public class MainServiceImpl implements MainService {
     @Override
     public  List<String> countrySearch(String details_continent){
         return mapper.countrySearch(details_continent);
-    };
+    }
+
+    @Override
+    public List<UserPostVO> userPostSample(String country) {
+        return mapper.userPostSample(country);
+    }
+
+    // 신고된 내용 가져오기
+    public String repPost(ReportVO vo){
+        Gson gson = new Gson();
+        if (vo.getR_category().equals("USER")){
+            return gson.toJson(mapper.repPost(vo.getIdx()));
+        } else if (vo.getR_category().equals("comment")){
+            return gson.toJson(mapper.repComment(vo.getIdx()));
+        } else {
+            return gson.toJson(mapper.repNestedC(vo.getIdx()));
+        }
+    }
+
+    @Override
+    public String repReason(ReportVO vo) {
+        Gson gson = new Gson();
+        return gson.toJson(mapper.repReason(vo));
+    }
+
+    @Override
+    public String blind(ReportVO vo) {
+        Gson gson = new Gson();
+        Map<String,Boolean> map = new HashMap<>();
+        if (mapper.blind(vo) > 0){
+            if (mapper.removeReport(vo) > 0){
+                map.put("result",true);
+            } else {
+                map.put("result",false);
+            }
+        } else {
+            map.put("result",false);
+        }
+        return gson.toJson(map);
+    }
+
 }

@@ -22,18 +22,23 @@
 
     </select>
     <select id="readUserReport" resultType="org.worldfinder.domain.ReportVO" parameterType="org.worldfinder.domain.Criteria">
-            <![CDATA[ SELECT * FROM
-                     (select rownum rn, idx,r_category  ,count(*)as r_count from report_table3
-                    where r_category = 'USER' and rownum <= (#{pageNum} * #{amount})
-                    GROUP By idx, r_category, rownum ) s
-                 where s.rn > ((#{pageNum}-1) * #{amount})
+            <![CDATA[
+                SELECT * FROM
+                    (select rownum rn, idx,r_category  ,r_count from
+                        (select idx , r_category  ,count(*)as r_count from REPORT_TABLE3
+                         GROUP By idx, r_category) t
+                    where r_category = 'USER' and rownum  <= (#{pageNum} * #{amount})
+                    GROUP By idx, r_category, rownum,r_count ) s
+                where s.rn > ((#{pageNum}-1) * #{amount})
             ]]>
     </select>
     <select id="readCommentReport" resultType="org.worldfinder.domain.ReportVO" parameterType="org.worldfinder.domain.Criteria">
         <![CDATA[ SELECT * FROM
-                (select rownum rn , idx,r_category  ,count(*)as r_count from report_table3
-                 where r_category = 'COMMENT' and rownum <= (#{pageNum} * #{amount})
-                 GROUP By idx, r_category,rownum ) s
+                (select rownum rn , idx,r_category  ,r_count from
+                    (select idx , r_category  ,count(*)as r_count from REPORT_TABLE3
+                     GROUP By idx, r_category) t
+                 where r_category in ('COMMENT','NEST_C') and rownum <= (#{pageNum} * #{amount})
+                 GROUP By idx, r_category,rownum,r_count ) s
             where s.rn > ((#{pageNum}-1) * #{amount})
         ]]>
     </select>
@@ -60,8 +65,17 @@
                 <otherwise>COUNTRY from C_CLASS_TABLE3 where DETAILS_CONTINENT = #{filterValue}</otherwise>
             </choose>
     </select>
-    <select id="getTotalCount" resultType="int">
-        SELECT count(*) FROM REQUEST_TABLE3
+    <select id="getTotalCount" resultType="int" parameterType="String">
+        SELECT count(*) FROM
+        <choose>
+            <when test="category == 'USER'">
+                REPORT_TABLE3 WHERE R_CATEGORY = #{category}
+            </when>
+            <when test="category == 'request'">
+                REQUEST_TABLE3
+            </when>
+            <otherwise> REPORT_TABLE3  WHERE R_CATEGORY != 'USER'</otherwise>
+        </choose>
     </select>
     <select id="clearCountList" resultType="hashMap">
         SELECT country FROM  COUNTRY_TABLE3
@@ -78,4 +92,48 @@
     <select id="countrySearch" parameterType="String" resultType="String">
         select country from C_CLASS_TABLE3 where  DETAILS_CONTINENT = #{details_continent}
     </select>
+
+
+    <!--임시로-->
+    <select id="userPostSample" resultType="org.worldfinder.domain.UserPostVO" parameterType="String">
+        select UP_IDX, U_WRITER, TITLE, REG_DATE, HIT, UP_LIKE from
+            USERPOST_TABLE3 where COUNTRY = #{country} and <![CDATA[ ROWNUM <= 6 ]]> order by HIT desc
+    </select>
+    
+    <select id="repPost" resultType="org.worldfinder.domain.UserPostVO" parameterType="long">
+        select U_WRITER, TITLE,UP_CONTENT ,REG_DATE from USERPOST_TABLE3 where up_idx = #{idx}
+    </select>
+    <select id="repComment" resultType="org.worldfinder.domain.CommentVO" parameterType="long">
+        select U_WRITER, C_CONTENT, REG_DATE from COMMENT_TABLE3 where C_IDX = #{idx}
+    </select>
+    <select id="repNestedC" resultType="org.worldfinder.domain.NestedCVO" parameterType="long">
+        select U_WRITER, NC_CONTENT, REG_DATE from NESTED_C_TABLE3 where NC_IDX = #{idx}
+    </select>
+
+    <select id="repReason" resultType="Map" parameterType="org.worldfinder.domain.ReportVO">
+        select R_CONTENT from REPORT_TABLE3 where IDX = #{idx} and R_CATEGORY = #{r_category}
+    </select>
+
+    <update id="blind" parameterType="org.worldfinder.domain.ReportVO">
+        update
+        <choose>
+            <when test="r_category == 'COMMENT'">
+                COMMENT_TABLE3 SET C_HIDE = 'true'
+                WHERE C_IDX = #{idx}
+            </when>
+            <when test="r_category == 'USER'">
+                USERPOST_TABLE3 SET UP_HIDE = 'true'
+                WHERE UP_IDX = #{idx}
+            </when>
+            <otherwise>
+                NESTED_C_TABLE3 SET NC_HIDE = 'true'
+                WHERE NC_IDX = #{idx}
+            </otherwise>
+        </choose>
+    </update>
+    <delete id="removeReport" parameterType="org.worldfinder.domain.ReportVO">
+        delete from REPORT_TABLE3
+        WHERE R_CATEGORY = #{r_category} AND IDX = #{idx}
+    </delete>
+
 </mapper>

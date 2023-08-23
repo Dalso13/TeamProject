@@ -25,7 +25,7 @@ public interface MainService {
     // 필터에 필요한값 가져오기
     public  List<Map<String,String>> readfilter(String filterValue , String category);
     // 페이지 카운트 세기
-    public  int getTotalCount();
+    public  int getTotalCount(String category);
 
     // 나라 페이지 업데이트
     public int countryModify(CountryVO vo);
@@ -38,4 +38,16 @@ public interface MainService {
 
     // 세부대륙 검색 결과 가져오기
     public  List<String> countrySearch(String details_continent);
+
+    //임시
+    public List<UserPostVO> userPostSample(String country);
+
+    // 신고된 내용 가져오기
+    public String repPost(ReportVO vo);
+
+    // 신고된 이유 가져오기
+    public String repReason(ReportVO vo);
+
+    // blind 처리
+    public String blind(ReportVO vo);
 }

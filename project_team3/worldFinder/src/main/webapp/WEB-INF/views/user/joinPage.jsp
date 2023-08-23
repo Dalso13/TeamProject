@@ -143,7 +143,8 @@
 	// 아이디 중복 체크-----------------------------------------------------------------------------
 	$(function (string) {
     //각 입력값들의 유효성 검증을 위한 정규표현식을 변수로 선언.
-       var getIdCheck = /^[0-9a-z]{8,16}$/;		
+       var getIdCheck = /^[0-9a-z]{8,16}$/;
+	   const speidCheck = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g;
        var getPwCheck = RegExp(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~])|([!,@,#,$,%,^,&,*,?,_,~].*[a-zA-Z0-9])/);
        var getMailCheck = /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 		var phoneRule =  /^(01[016789]{1})-[0-9]{4}-[0-9]{4}$/;
@@ -163,11 +164,15 @@
        }
      //정규표현식변수.test('검증하고 싶은 값')  => return boolean type
      //정규표현식이 맞으면true 아니면 false
-       else if(!getIdCheck.test($(this).val())) {//정규표현식이 틀렸다면
+	   else if (this.value.search(speidCheck) > -1){
+		   $(this).css(' border-color', 'red');
+		   $('#idCk').html('<b style="font-size: 14px; color: red">특수문자는 사용할수 없습니다.</b>');
+		   chk1 = false;
+	   } else if(!getIdCheck.test($(this).val())) {//정규표현식이 틀렸다면
     	  $(this).css(' border-color', 'red');
           $('#idCk').html('<b style="font-size: 14px; color: red">8자이상 16자이내로 입력하세요.</b>');
           chk1 = false;
-       }else{
+       } else{
        	//ID중복 확인 통신을 위해 입력값을 가져오기
        	var id = $(this).val();
        

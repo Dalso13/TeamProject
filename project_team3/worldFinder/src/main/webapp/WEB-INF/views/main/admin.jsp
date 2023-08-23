@@ -7,8 +7,20 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="../../../resources/css/buttonStyle.css">
     <link rel="stylesheet" href="../../../resources/css/base.css">
     <style>
+        #viewDetails , #viewComment{
+            display: none;
+            width: 1000px;
+            height: 600px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            z-index: 10;
+        }
         #menu {
             width: 80%;
             margin: auto;
@@ -58,9 +70,9 @@
     <div id="body">
         <%@include file="../include/logo.jsp"%>
         <div id="menu">
-            <span style="border-right: 1px solid black" data-menu="report" data-report="userPost">게시글 신고 내용</span>
-            <span style="border-right: 1px solid black" data-menu="report" data-report="comment">댓글 신고 내용</span>
-            <span data-menu="request">건의 사항</span>
+            <span style="border-right: 1px solid black"  data-menu="report" data-report="userPost"><button class="button button--ujarak button--border-thin button--text-thick"> 게시글 신고 내용 </button></span>
+            <span style="border-right: 1px solid black" data-menu="report" data-report="comment"><button class="button button--ujarak button--border-thin button--text-thick">댓글 신고 내용 </button></span>
+            <span data-menu="request"><button class="button button--ujarak button--border-thin button--text-thick">건의 사항 </button></span>
         </div>
         <div id="main">
             <div id="userPost">
@@ -119,6 +131,27 @@
             </div>
         </div>
     </div>
+    <div id="viewDetails">
+        <div id="repMenu" style="height: 100%">
+            제목
+            <div id="req_title"></div>
+            <br>
+            작성자 <div id="req_writer"></div>
+            <br>
+            내용
+            <hr>
+            <div id="editor" contenteditable="false" style="overflow: auto"></div>
+            <br>
+        </div>
+        <button type="button"onclick="closeRep()">닫기</button>
+    </div>
+    <div id="viewComment">
+        <div id="repCommentList" style="height: 100%">
+
+        </div>
+        <button type="button"onclick="closeRep()">닫기</button>
+    </div>
+
     <script !src="">
         const paging = $("#paging");
         const menu = document.querySelector("#menu").getElementsByTagName("span");
@@ -156,7 +189,9 @@
 
 
                     if (this.dataset.report == "userPost"){
-                        reportAjax("유저","1");
+                        // $(this).find("button").css("color","#fff")
+                        // $(this).find("button").css("backgroundColor","#37474f")
+                        reportAjax("USER","1");
                         userReport.style.display = "block";
                     } else if (this.dataset.menu === "request") {
                         requestAjax('1');
@@ -209,19 +244,19 @@
 
             datas.reportVO.forEach((d) => {
                     texts += `<tr>`;
-                    texts += `<td> <a>본문 보기</a> </td>
-                    <td> <a>신고 사유</a> </td>
-                    <td> <a>신고 당한 날짜</a> </td>
+                    texts += `<td> <a style="cursor: pointer" onclick="repPostGo(\${d.idx},'\${d.r_category}')">본문 보기</a> </td>
+                    <td> <a style="cursor: pointer" onclick="repReason(\${d.idx},'\${d.r_category}')">신고 사유</a> </td>
+                    <td> <a>\${d.reg_date}</a> </td>
                     <td> \${d.r_count} </td>
-                    <td> <a>블라인드 처리</a> </td>
+                    <td> <button type="button" onclick="blind(\${d.idx},'\${d.r_category}')">블라인드 처리</button> </td>
                     </tr>`;
             })
 
-            if (a == "유저"){
-                reportTbody.html(emptyValue)
+            if (a == "USER"){
+                reportTbody.html(texts)
 
             } else if (a == "comment") {
-                commentTbody.html(emptyValue)
+                commentTbody.html(texts)
 
             }
 
@@ -276,7 +311,7 @@
             }
 
             if (document.getElementById("nowPageNum").value == "유저"){
-                reportAjax("유저",e.target.innerText);
+                reportAjax("USER",e.target.innerText);
             } else if (document.getElementById("nowPageNum").value == "comment")  {
                 reportAjax("comment", e.target.innerText);
             } else {
@@ -286,6 +321,8 @@
 
         // 페이지 버튼 생성
         function allPaging(data , a) {
+            console.log(data)
+            console.log(a)
             let pageText = "";
             // 페이지 처리
             pageText += "<div>";
@@ -310,7 +347,105 @@
     </script>
     <script>
         userReport.style.display = "block";
-        reportAjax("유저","1");
+        reportAjax("USER","1");
+
+        const viewDetails = document.getElementById("viewDetails");
+        const viewComment = document.getElementById("viewComment");
+        function repReason(a,b){
+            let json = {
+                'r_category' : b,
+                'idx' : a
+            }
+
+            fetch("/admin/repReason", {
+                method: "post",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(json)
+            }).then((response) => response.json())
+                .then(data => {
+                    let text = "";
+                    document.body.style.background = "rgba(0, 0, 0, 0.5)";
+                    document.getElementById("logo").style.opacity = "0.1";
+                    viewComment.style.display = "inline-block";
+                    data.forEach((d) =>{
+                        text +=`<div>\${d.R_CONTENT}</div>`;
+                    })
+                    document.getElementById("repCommentList").innerHTML = text;
+                    document.getElementById("logo").style.cursor = "default";
+                    document.getElementById("logo").removeEventListener("click", homeGoLogo);
+
+                }) .catch((error)=> console.log(error));
+        }
+        function repPostGo(a,b){
+           let json = {
+                'r_category' : b,
+                'idx' : a
+            }
+
+            fetch("/admin/repPost", {
+                method: "post",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(json)
+            }).then((response) => response.json())
+                .then(data => {
+                    let keys = Object.keys(data)
+                    document.getElementById("req_writer").innerHTML = data.u_writer;
+                    if (keys.includes('up_content')){
+                        document.getElementById("editor").innerHTML = data.up_content;
+                        document.getElementById("req_title").innerHTML = (data["title"]);
+                    } else if (keys.includes('c_content')) {
+                        document.getElementById("editor").innerHTML = data.c_content;
+                    } else if (keys.includes('nc_content')){
+                        document.getElementById("editor").innerHTML = data.nc_content;
+                    }
+                    document.body.style.background = "rgba(0, 0, 0, 0.5)";
+                    viewDetails.style.display = "inline-block";
+                    document.getElementById("logo").style.opacity = "0.1";
+                    document.getElementById("logo").style.cursor = "default";
+                    document.getElementById("logo").removeEventListener("click", homeGoLogo);
+
+                }) .catch((error)=> console.log(error));
+        }
+        function blind(a,b){
+            let json = {
+                'r_category' : b,
+                'idx' : a
+            }
+
+            fetch("/admin/blind", {
+                method: "post",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(json)
+            }).then((response) => response.json())
+                .then(data => {
+                    if (data.result){
+                        alert("블라인드 되었습니다.")
+                        let page = document.getElementById("nowPageNum");
+                        if (b == "USER"){
+                            reportAjax("USER", page.value);
+                        } else if (b == "comment" && b == "nest_c"){
+                            reportAjax("comment", page.value)
+                        } else {
+                            requestAjax(page.value)
+                        }
+                    } else {
+                        alert("블라인드 실패")
+                        return;
+                    }
+                }).catch((error)=> console.log(error));
+        }
+        function closeRep(){
+            if (viewDetails.style.display != "none"){
+                viewDetails.style.display = "none";
+            }else if (viewComment.style.display != "none"){
+                viewComment.style.display = "none";
+            }
+            document.body.style.background = "none";
+            document.getElementById("logo").style.opacity = "1.0";
+            document.getElementById("logo").style.cursor = "pointer";
+            document.getElementById("logo").addEventListener("click", homeGoLogo)
+        }
+
     </script>
 </body>
 </html>
