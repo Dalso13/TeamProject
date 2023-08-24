@@ -17,6 +17,7 @@
              from REQUEST_TABLE3
              where rownum <= (#{pageNum} * #{amount}) ) s
         where s.rn > ((#{pageNum}-1) * #{amount})
+         order by rn desc
         ]]>
 
 
@@ -30,6 +31,7 @@
                     where r_category = 'USER' and rownum  <= (#{pageNum} * #{amount})
                     GROUP By idx, r_category, rownum,r_count ) s
                 where s.rn > ((#{pageNum}-1) * #{amount})
+                order by r_count desc
             ]]>
     </select>
     <select id="readCommentReport" resultType="org.worldfinder.domain.ReportVO" parameterType="org.worldfinder.domain.Criteria">
@@ -40,6 +42,7 @@
                  where r_category in ('COMMENT','NEST_C') and rownum <= (#{pageNum} * #{amount})
                  GROUP By idx, r_category,rownum,r_count ) s
             where s.rn > ((#{pageNum}-1) * #{amount})
+             order by r_count desc
         ]]>
     </select>
     <select id="readContinent" resultType="org.worldfinder.domain.CountryClassVO">

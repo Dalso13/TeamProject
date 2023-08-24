@@ -419,6 +419,7 @@
             }).then((response) => response.json())
                 .then(data => {
                     if (data.result){
+                        alert("블라인드 되었습니다.")
                         let page = document.getElementById("nowPageNum");
                         if (b == "USER"){
                             reportAjax("USER", page.value);

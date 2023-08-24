@@ -48,8 +48,8 @@
                 </script>
             </sec:authorize>
             <sec:authorize access="hasAuthority('user')">
-                <button id="adminGo" class="button button--ujarak button--border-medium button--round-s button--text-thick">관리자 페이지 (임시)</button>
-                <button id="writeGO" class="button button--ujarak button--border-medium button--round-s button--text-thick">나라게시글 작성 (임시)</button>
+                <button id="adminGo" class="button button--ujarak button--border-medium button--round-s button--text-thick">관리자</button>
+                <button id="writeGO" class="button button--ujarak button--border-medium button--round-s button--text-thick">나라게시글 작성</button>
                 <script>
                     document.getElementById("adminGo").onclick = function () {
                         location.href = "/adminPage";
@@ -59,7 +59,7 @@
                     }
                 </script>
             </sec:authorize>
-             <button id="requestGo" class="button button--ujarak button--border-medium button--round-s button--text-thick">건의사항 페이지 (임시)</button>
+             <button id="requestGo" class="button button--ujarak button--border-medium button--round-s button--text-thick">건의사항</button>
         </span><br>
        <img src="../../../resources/image/logo.jpg"  id="logo"/>
             <div id="sch">

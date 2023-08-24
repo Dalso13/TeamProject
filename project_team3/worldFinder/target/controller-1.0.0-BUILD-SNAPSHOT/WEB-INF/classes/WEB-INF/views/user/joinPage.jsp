@@ -28,6 +28,7 @@
 	}
 </style>
 <body>
+<%@include file="../include/itemFilter.jsp"%>
 	<div id="body">
 		<div>
 			<%@include file="../include/logo.jsp"%>
