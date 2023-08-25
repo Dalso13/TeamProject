@@ -55,11 +55,20 @@ public class ManagerItemController {
 		
 		return "manager/item/itemList2";
 	}
+
+	@PostMapping("/itemList3")
+	public String toList3(Model model , @RequestParam ("country") String country) {
+		log.info("controller itemList3...");
+		model.addAttribute("country", service.countryCategory(country));
+
+		return "manager/item/itemList3";
+	}
 	
 	@GetMapping("/itemList3")
 	public String toList3(Model model, Criteria cri) {
 		log.info("controller itemList3...");
-		
+
+
 		return "manager/item/itemList3";
 	}
 	

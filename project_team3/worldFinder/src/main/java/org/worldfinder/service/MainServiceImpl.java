@@ -104,9 +104,9 @@ public class MainServiceImpl implements MainService {
     // 신고된 내용 가져오기
     public String repPost(ReportVO vo){
         Gson gson = new Gson();
-        if (vo.getR_category().equals("USER")){
+        if (vo.getR_category().equalsIgnoreCase("post")){
             return gson.toJson(mapper.repPost(vo.getIdx()));
-        } else if (vo.getR_category().equals("comment")){
+        } else if (vo.getR_category().equalsIgnoreCase("comment")){
             return gson.toJson(mapper.repComment(vo.getIdx()));
         } else {
             return gson.toJson(mapper.repNestedC(vo.getIdx()));

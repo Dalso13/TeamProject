@@ -28,7 +28,7 @@
                     (select rownum rn, idx,r_category  ,r_count from
                         (select idx , r_category  ,count(*)as r_count from REPORT_TABLE3
                          GROUP By idx, r_category) t
-                    where r_category = 'USER' and rownum  <= (#{pageNum} * #{amount})
+                    where r_category = 'post' and rownum  <= (#{pageNum} * #{amount})
                     GROUP By idx, r_category, rownum,r_count ) s
                 where s.rn > ((#{pageNum}-1) * #{amount})
                 order by r_count desc
@@ -39,7 +39,7 @@
                 (select rownum rn , idx,r_category  ,r_count from
                     (select idx , r_category  ,count(*)as r_count from REPORT_TABLE3
                      GROUP By idx, r_category) t
-                 where r_category in ('COMMENT','NEST_C') and rownum <= (#{pageNum} * #{amount})
+                 where r_category in ('comment','reply') and rownum <= (#{pageNum} * #{amount})
                  GROUP By idx, r_category,rownum,r_count ) s
             where s.rn > ((#{pageNum}-1) * #{amount})
              order by r_count desc
@@ -71,13 +71,13 @@
     <select id="getTotalCount" resultType="int" parameterType="String">
         SELECT count(*) FROM
         <choose>
-            <when test="category == 'USER'">
+            <when test="category == 'post'">
                 REPORT_TABLE3 WHERE R_CATEGORY = #{category}
             </when>
             <when test="category == 'request'">
                 REQUEST_TABLE3
             </when>
-            <otherwise> REPORT_TABLE3  WHERE R_CATEGORY != 'USER'</otherwise>
+            <otherwise> REPORT_TABLE3  WHERE R_CATEGORY != 'post'</otherwise>
         </choose>
     </select>
     <select id="clearCountList" resultType="hashMap">
@@ -120,11 +120,11 @@
     <update id="blind" parameterType="org.worldfinder.domain.ReportVO">
         update
         <choose>
-            <when test="r_category == 'COMMENT'">
+            <when test="r_category == 'comment'">
                 COMMENT_TABLE3 SET C_HIDE = 'true'
                 WHERE C_IDX = #{idx}
             </when>
-            <when test="r_category == 'USER'">
+            <when test="r_category == 'post'">
                 USERPOST_TABLE3 SET UP_HIDE = 'true'
                 WHERE UP_IDX = #{idx}
             </when>

@@ -191,7 +191,7 @@
                     if (this.dataset.report == "userPost"){
                         // $(this).find("button").css("color","#fff")
                         // $(this).find("button").css("backgroundColor","#37474f")
-                        reportAjax("USER","1");
+                        reportAjax("post","1");
                         userReport.style.display = "block";
                     } else if (this.dataset.menu === "request") {
                         requestAjax('1');
@@ -252,7 +252,7 @@
                     </tr>`;
             })
 
-            if (a == "USER"){
+            if (a == "post"){
                 reportTbody.html(texts)
 
             } else if (a == "comment") {
@@ -311,7 +311,7 @@
             }
 
             if (document.getElementById("nowPageNum").value == "유저"){
-                reportAjax("USER",e.target.innerText);
+                reportAjax("post",e.target.innerText);
             } else if (document.getElementById("nowPageNum").value == "comment")  {
                 reportAjax("comment", e.target.innerText);
             } else {
@@ -347,7 +347,7 @@
     </script>
     <script>
         userReport.style.display = "block";
-        reportAjax("USER","1");
+        reportAjax("post","1");
 
         const viewDetails = document.getElementById("viewDetails");
         const viewComment = document.getElementById("viewComment");
@@ -381,11 +381,12 @@
                 'r_category' : b,
                 'idx' : a
             }
-
+            console.log(json)
             fetch("/admin/repPost", {
                 method: "post",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(json)
+
             }).then((response) => response.json())
                 .then(data => {
                     let keys = Object.keys(data)
@@ -411,7 +412,6 @@
                 'r_category' : b,
                 'idx' : a
             }
-
             fetch("/admin/blind", {
                 method: "post",
                 headers: {"Content-Type": "application/json"},
@@ -421,9 +421,9 @@
                     if (data.result){
                         alert("블라인드 되었습니다.")
                         let page = document.getElementById("nowPageNum");
-                        if (b == "USER"){
-                            reportAjax("USER", page.value);
-                        } else if (b == "comment" && b == "nest_c"){
+                        if (b == "post"){
+                            reportAjax("post", page.value);
+                        } else if (b == "comment" && b == "reply"){
                             reportAjax("comment", page.value)
                         } else {
                             requestAjax(page.value)

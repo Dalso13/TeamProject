@@ -2,6 +2,7 @@ package org.worldfinder.service;
 
 import java.util.List;
 
+import org.worldfinder.domain.CountryClassVO;
 import org.worldfinder.domain.Criteria;
 import org.worldfinder.domain.ItemFilterVO;
 import org.worldfinder.domain.ItemVO;
@@ -16,4 +17,7 @@ public interface ManagerItemService {
 	public List<ItemVO> getListWithPaging(Criteria cri);
 	public List<ItemVO> getListwithFilter(ItemFilterVO itemFiltervo);
 	public int countApplyFilter(ItemFilterVO itemFiltervo);
+
+	// 나라불러오기
+	public CountryClassVO countryCategory(String country);
 }

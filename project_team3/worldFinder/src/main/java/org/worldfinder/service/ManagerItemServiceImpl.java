@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.worldfinder.domain.CountryClassVO;
 import org.worldfinder.domain.Criteria;
 import org.worldfinder.domain.ItemFilterVO;
 import org.worldfinder.domain.ItemVO;
@@ -67,7 +68,11 @@ public class ManagerItemServiceImpl implements ManagerItemService{
 		log.info("service countApplyFilter...");
 		return mapper.countApplyFilter(itemFiltervo);
 	}
-	
-	
+
+	@Override
+	public CountryClassVO countryCategory(String country) {
+		return  mapper.countryCategory(country);
+	}
+
 
 }

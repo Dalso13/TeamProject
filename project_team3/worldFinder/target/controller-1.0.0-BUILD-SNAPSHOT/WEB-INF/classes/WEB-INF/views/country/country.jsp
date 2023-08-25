@@ -134,9 +134,11 @@
                 </sec:authorize>
 
                 <span>
-                    <button id ="itemHotel" class="btn"> <span>호텔</span></button>
-                    <button id ="itemFood" class="btn"> <span>맛집</span></button>
-                   <button id ="itemView" class="btn"> <span>관광지</span></button>
+                    <button id ="itemAll" class="btn"> <span>상품</span></button>
+                   <button id ="itemFood" class="btn"> <span>맛집</span></button>
+                    <form id="itemForm" method="post" style="display: none">
+                        <input type="text" name="country" value="${reCountry}">
+                    </form>
                  </span>
                 <hr>
                 <div id="titleImg"></div>
@@ -203,17 +205,21 @@
             //         // location.href = itemLink;
             //     }
             // })
-            document.getElementById("itemHotel").onclick = function () {
-                location.href = "/manager/item/itemList";
+             let formData = document.getElementById("itemForm");
+            document.getElementById("itemAll").onclick = function () {
+
+                formData.action = '/manager/item/itemList3';
+                formData.submit();
+
             }
             document.getElementById("itemFood").onclick = function () {
-                location.href = "/manager/food/foodList";
+
+                formData.action = '/manager/food/foodList';
+                formData.submit();
             }
-            document.getElementById("itemView").onclick = function () {
-                location.href = "/manager/item/itemList";
-            }
+            const reCountry = "${reCountry}";
             document.getElementById("userPostOther").onclick = function () {
-                location.href = "/userPost/main";
+                location.href = "/userPost/main?country=" + reCountry;
             }
            function postGo(idx){
                 location.href = "/userPost/view?up_idx=" + idx;
