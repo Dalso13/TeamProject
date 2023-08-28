@@ -26,13 +26,13 @@
 	}
 	.page-btn-now{
 		list-style: none;
-		background-color: gray;
+		background-color: white;
 		pointer-events: none; /* 현재 페이지 클릭 막기 */
 		font-size: 1.5em;
 		float: left;
 		margin-right: 20px;
 		border: solid black 1px;
-		color: white;
+		color: black;
 		text-decoration-line: none;
 	}
 	
@@ -112,8 +112,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <!-- 구글 맵 api 사용 설치 파일 -->
-	<%--키 일부러 삭제함--%>
-<script src="http://maps.googleapis.com/maps/api/js?key="></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDMR_wbRSxhUfjlmG_Pbk6OHjr6mJvgkMI"></script>
 
 <!-- 부트스트랩 달력 사용 설치 파일 -->
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -145,7 +144,7 @@
 
 	<div class = "itemList" id="wholeDiv">
 		<div id="serachFilter">
-			<input type="button" value="등록하기" style="float: right;"><br><br>
+			<input id="tlqkf" type="button" value="등록하기" style="float: right;"><br><br>
 			
 			 <%@ include file="../../include/itemFilter.jsp"%>
 			<label id="countryInform"></label>
@@ -153,15 +152,20 @@
 			<br><br>
 			
 			<button id="spotAble" class="disable">관광지</button>
-			<button id="hotelAble" class="disable">숙소</button><br><br>
+			<button id="hotelAble" class="disable">숙소</button>
+			
+			<br><br>
 			
 			날짜 
-			<label>Start Event <input type="text" id="datepickerStart" class="startEvent" value="" readonly="readonly" autocomplete="off"></label>
-			<label class="endDay">End Event <input type="text" id="datepickerEnd" class="endEvent" readonly="readonly" autocomplete="off"></label>
+			<label>여행시작일 <input type="text" id="datepickerStart" class="startEvent" value="" readonly="readonly" autocomplete="off"></label>
+			<label class="endDay">여행종료일 <input type="text" id="datepickerEnd" class="endEvent" readonly="readonly" autocomplete="off"></label>
 			<br>
 			인원	<input type="number" id="peopleNum" value="1" autocomplete="off">명
 			<br>
 			<button class="filterReset">필터초기화</button>
+			
+			<form action="/manager/item/itemList3" method="post" id="actionForm"></form>
+			<div id="itemFilterForm"></div>
 			
 		</div>
 		
@@ -188,6 +192,7 @@
 	
 <!-- onload -->
 <script type="text/javascript">
+
 	$(function(){
 		var itemFilter = new Object();	//검색 필터 정보 요소
 		itemFilter.people = '1';	//인원수는 기본값이 1이므로 미리 추가
@@ -199,6 +204,8 @@
 		
 		ajaxItemList(itemFilter);	            
 	});	
+	
+	
 </script>
 
 <!-- 본문 글 삽입 + 페이징 (ajax 비동기 처리)  -->
@@ -206,12 +213,13 @@
 
 	//비동기 처리 리스트 불러오기 
 	function ajaxItemList(itemFilter){
+		//console.log(JSON.stringify(itemFilter));
 		
 		$.ajax({
 			 anyne : true,
 	         type : 'POST',
 		     data : JSON.stringify(itemFilter),
-	         url : '/manager/item/ajaxItemListFilter',         
+	         url : '/manager/item/ajaxItemListFilterDate',         
 	         dataType : "json",
 	         contentType : "application/json; charset=utf-8",
 	         success : function(data) {
@@ -238,7 +246,7 @@
 		               
 						//상품 정보
 						str += '<td width="600px"><ul>';
-						str += '<li><a href="#">'+ item.item_Name +'</a></li>';
+						str += '<li><a href="#" id="getPage" idx="' + item.item_Idx + '" category = "' + item.item_Category + '">'+ item.item_Name +'</a></li>';
 						str += '<li>'+ item.address +'</li>';
 						str += '<li>'+ item.price +'</li>';
 						str += '</ul></td>';    
@@ -268,6 +276,7 @@
 		            	}
 		            }
 				}
+				
 	            $('#itemTbody').html(str);
 	            $('#itemPgaeButton').html(strPage); 
 	            
@@ -428,7 +437,7 @@
 	$(function() {
 
 		//input을 datepicker로 선언
-		$("#datepickerStart, #datepickerEnd").datepicker({
+		$("#datepickerStart").datepicker({
 		    dateFormat: 'yy-mm-dd' //달력 날짜 형태
 		    ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
 		    ,showMonthAfterYear:true // 월- 년 순서가아닌 년도 - 월 순서
@@ -443,8 +452,28 @@
 		    ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip
 		    ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 텍스트
 		    ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 Tooltip
-		    ,minDate: "0D" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-		    ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)
+		    ,minDate: "2023-08-01" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+		    ,maxDate: "2023-08-31" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)
+			,beforeShowDay: disableAllTheseDays 
+		});
+		//input을 datepicker로 선언
+		$("#datepickerEnd").datepicker({
+		    dateFormat: 'yy-mm-dd' //달력 날짜 형태
+		    ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
+		    ,showMonthAfterYear:true // 월- 년 순서가아닌 년도 - 월 순서
+		    ,changeYear: true //option값 년 선택 가능
+		    ,changeMonth: true //option값  월 선택 가능                
+		    ,showOn: "both" //button:버튼을 표시하고,버튼을 눌러야만 달력 표시 ^ both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시  
+		    ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
+		    ,buttonImageOnly: true //버튼 이미지만 깔끔하게 보이게함
+		    ,buttonText: "선택" //버튼 호버 텍스트              
+		    ,yearSuffix: "년" //달력의 년도 부분 뒤 텍스트
+		    ,monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 텍스트
+		    ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip
+		    ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 텍스트
+		    ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 Tooltip
+		    ,minDate: "2023-08-01" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+		    ,maxDate: "2023-08-31" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)
 			,beforeShowDay: disableAllTheseDays 
 		});
 		
@@ -483,6 +512,7 @@
 	itemFilter.startDay = '';
 	itemFilter.endDay = '';
 	
+	
 	//검색 필터에 나라이름 삽입
 	function ranName(e){
 		itemFilter.country = e;
@@ -496,7 +526,6 @@
 
 	//검색 필터에 카테고리 정보 삽입
 	$("#spotAble").on('click', function(){
-		
 		
 		if($('#hotelAble').attr('class') == 'able'){
 			$('#hotelAble').attr('class', 'disable');
@@ -525,8 +554,8 @@
 		if($(this).attr('class') == 'able'){
 			$(this).attr('class', 'disable');
 			/* $(".endDay").hide();
-			$(".endEvent").val("");
-			itemFilter.item_Category = ''; */
+			$(".endEvent").val("");*/
+			itemFilter.item_Category = '';
 		}
 		else{
 			$(this).attr('class', 'able');
@@ -536,6 +565,7 @@
 		itemFilter.page = '1';
 		ajaxItemList(itemFilter);
 	});
+	
 	
 	
 	//검색 필터에 시작일, 종료일 정보 삽입
@@ -611,9 +641,69 @@
 	});
 	
 		
-		
+	
+	
+	
+	
+	
 
 </script>
+
+<!-- 게시글 클릭해서 상세페이지로 넘어가기 -->
+<script type="text/javascript">
+
+	
+	const actionForm = $("#actionForm");			
+
+	$(document).on('click', '#getPage', function(e){
+		e.preventDefault();
+		
+		var category = $(this).attr("category");
+		var idxGet = $(this).attr("idx"); 
+		
+		var url = '/manager/item/' + category + 'Get';
+		actionForm.attr('action', url);	//경로 변경	
+				
+		var peopleGet = itemFilter.people;
+		var pageGet = itemFilter.page;
+		
+		
+		var countryGet = itemFilter.country;
+		var item_CategoryGet = itemFilter.item_Category;
+		var startDayGet = itemFilter.startDay;
+		var endDayGet = itemFilter.endDay;
+					
+		if(countryGet == ''){
+			countryGet = 'None';
+		}
+		if(item_CategoryGet == ''){
+			item_CategoryGet = 'None';
+		}
+		if(startDayGet == ''){
+			startDayGet = '1900-01-01';
+		}
+		if(endDayGet == ''){
+			endDayGet = '1900-01-01';
+		}
+		
+		actionForm.empty();
+ 		actionForm.append("<input type='hidden' name='idx' value = '" + idxGet + "'/>");		
+ 		actionForm.append("<input type='hidden' name='people' value = '" + peopleGet + "'/>");		
+ 		actionForm.append("<input type='hidden' name='country' value = '" + countryGet + "'/>");		
+ 		actionForm.append("<input type='hidden' name='item_Category' value = '" + item_CategoryGet + "'/>");		
+ 		actionForm.append("<input type='hidden' name='startDay' value = '" + startDayGet + "'/>");		
+ 		actionForm.append("<input type='hidden' name='endDay' value = '" + endDayGet + "'/>");		
+ 		actionForm.append("<input type='hidden' name='page' value = '" + pageGet + "'/>");		
+	
+ 		actionForm.submit();
+	}); 
+	
+</script>
+
+
+	
+
+
 
 </body>
 </html>

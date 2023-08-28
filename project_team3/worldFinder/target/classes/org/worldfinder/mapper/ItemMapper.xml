@@ -40,9 +40,9 @@
 		)
 	</insert>
 	
-	<select id="getItemList" resultType="org.worldfinder.domain.ItemVO">
+<!-- 	<select id="getItemList" resultType="org.worldfinder.domain.ItemVO">
 		select * from item_table3
-	</select>
+	</select> -->
 	
 	
 	<update id="updateItem" parameterType="org.worldfinder.domain.ItemVO">
@@ -63,39 +63,37 @@
 		where item_Idx = #{item_Idx}
 	</delete>
 	
-	<select id="getListwithPaging" parameterType="org.worldfinder.domain.Criteria" resultType="org.worldfinder.domain.ItemVO">
+<!-- 	<select id="getListwithPaging" parameterType="org.worldfinder.domain.Criteria" resultType="org.worldfinder.domain.ItemVO">
 		<![CDATA[
-			select rownum rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
-							people, price,  tel, item_Option, item_Url
+			select ROW_NUMBER() OVER(ORDER BY item_idx desc) AS rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+                                people, price,  tel, item_Option, item_Url
 			from
-				(select 
-				rownum rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
-							people, price,  tel, item_Option, item_Url 
+				(SELECT ROW_NUMBER() OVER(ORDER BY item_idx asc) AS rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+                                people, price,  tel, item_Option, item_Url
 				from item_table3
 				where rownum <= 
 				]]>(#{amount} * #{pageNum})
 				<![CDATA[)
 			where rn > ]]>(#{amount} * #{pageNum} - #{amount})
-	</select>
+	</select> -->
 	
 	<select id="getListwithFilter" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="org.worldfinder.domain.ItemVO">
 		<![CDATA[
-			select rownum rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
-							people, price,  tel, item_Option, item_Url
+			select ROW_NUMBER() OVER(ORDER BY item_idx desc) AS rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+                                people, price,  tel, item_Option, item_Url
 			from
-				(select 
-				rownum rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
-							people, price,  tel, item_Option, item_Url 
+				(SELECT ROW_NUMBER() OVER(ORDER BY item_idx asc) AS rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+                                people, price,  tel, item_Option, item_Url
 				from item_table3
 				where rownum <= 
-				]]>(#{amount} * #{page})
+				]]>#{countTotal} - (#{amount} * #{page} - #{amount})
 				<!-- ========================= -->
 				<if test="country!=null and !country.equals('')">and country = #{country}</if>
 				<if test="item_Category!=null and !item_Category.equals('')">and item_Category = #{item_Category}</if>
 				<if test="people!=null and !people.equals('')">and people >= #{people}</if>
 				<!-- ========================= -->
 				<![CDATA[)
-			where rn > ]]>(#{amount} * #{page} - #{amount})
+			where rn > ]]>#{countTotal} - (#{amount} * #{page})
 	</select>
 	
 	<select id="countApplyFilter" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="int">
@@ -113,23 +111,212 @@
 		select count(*) from item_table3
 	</select>
 	
-	<select id="selectWithHotel" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="org.worldfinder.domain.ItemVO">
-	
+	<select id="getUserOrder" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="org.worldfinder.domain.UserOrderVO">
+	<![CDATA[
+		select item_Idx, sum(people) as "PEOPLE", hotel_idx, check_in_date, check_out_date
+		from user_oders_table3
+		where check_in_date <= ]]>
+		#{startDay}
+		<![CDATA[
+		or check_out_date >= ]]>
+		#{endDay}
+		group by item_idx, check_in_date, hotel_idx, check_out_date
 	</select>
 	
-	<select id="selectWithSpot" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="org.worldfinder.domain.ItemVO">
 	
+	<select id="countWithSpot" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="int">
+		SELECT count(*) from item_table3
+    where item_idx not in (
+        select item_idx from (
+            select item.item_idx, count(*) as "OVERNUM" from item_table3 item,
+                (select item_idx, sum(people) as "PEOPLE", check_in_date, check_out_date, hotel_idx
+                from user_oders_table3
+                where 
+                (check_in_date >= 
+                #{startDaySpot}
+               <![CDATA[ and check_out_date <= ]]>
+               #{endDaySpot}
+               )
+            and hotel_idx is null
+            group by item_idx, check_in_date, check_out_date, hotel_idx) oders
+            where item.item_Idx = oders.item_Idx
+           <![CDATA[ and item.people < oders.people + ]]>#{people}
+            group by item.item_idx
+        )
+        where TO_DATE(
+        #{endDaySpot}
+        , 'YY/MM/DD') - TO_DATE(
+        #{startDaySpot}
+        ,  <![CDATA['YY/MM/DD') + 1 <= overnum)
+    and item_category = 'spot']]>
+    		<if test="country!=null and !country.equals('')">and country = #{country}</if>
+	</select>
+	
+	<select id="countWithHotel" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="int">
+		SELECT count(*) from item_table3
+	    where item_idx not in(
+	    select hotel_num from
+	    (
+	        select item_idx as "HOTEL_NUM", count(*) as "ROOM_COUNT" from 
+	        (
+	            select detail.item_idx, detail.hotel_idx
+	            from 
+	            (select * from user_oders_table3
+	            where hotel_idx is not null) oders,
+	            hotel_detail_table3 detail
+	            where oders.hotel_idx(+) = detail.hotel_idx
+	           <![CDATA[ and ((oders.check_in_date < ]]>#{endDayHotel}
+	            and oders.check_out_date > #{startDayHotel})
+	           <![CDATA[ or detail.hotelRoom_people <]]> #{people})
+	            group by detail.item_idx, detail.hotel_idx
+	        )
+	        group by item_idx
+	    )
+	    where room_count >= (select count(*)
+	                        from hotel_detail_table3
+	                        where item_idx = hotel_num))
+	    and item_category = 'hotel'
+	    <if test="country!=null and !country.equals('')">and country = #{country}</if>
+	</select>
+	
+	<select id="listWithNull" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="org.worldfinder.domain.ItemVO">
+		select ROW_NUMBER() OVER(ORDER BY item_idx desc) AS rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+                                people, price,  tel, item_Option, item_Url
+			from (
+			    SELECT ROW_NUMBER() OVER(ORDER BY item_idx asc) AS rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+			                                people, price,  tel, item_Option, item_Url from item_table3
+			    where item_idx not in ( 
+			        select item_idx from (
+			            select item.item_idx, count(*) as "OVERNUM" from item_table3 item,
+			                (select item_idx, sum(people) as "PEOPLE", check_in_date, check_out_date, hotel_idx
+			                from user_oders_table3
+			                where 
+			                (check_in_date >= #{startDaySpot}
+			                and check_out_date<![CDATA[ <= ]]>#{endDaySpot})
+			            and hotel_idx is null
+			            group by item_idx, check_in_date, check_out_date, hotel_idx) oders
+			            where item.item_Idx = oders.item_Idx
+			            and item.people<![CDATA[ < ]]>oders.people + #{people}
+			            group by item.item_idx
+			        )
+			        where TO_DATE(#{endDaySpot}, 'YY/MM/DD') - TO_DATE(#{startDaySpot}, 'YY/MM/DD') + 1<![CDATA[ <= ]]>overnum
+			        union
+			        select hotel_num from
+			        (
+			            select item_idx as "HOTEL_NUM", count(*) as "ROOM_COUNT" from 
+			            (
+			                select detail.item_idx, detail.hotel_idx
+			                from 
+			                (select * from user_oders_table3
+			                where hotel_idx is not null) oders,
+			                hotel_detail_table3 detail
+			                where oders.hotel_idx(+) = detail.hotel_idx
+			                and ((oders.check_in_date<![CDATA[ < ]]>#{endDayHotel}
+			                and oders.check_out_date > #{startDayHotel})
+			                or detail.hotelRoom_people<![CDATA[ <]]> #{people})
+			                group by detail.item_idx, detail.hotel_idx
+			            )
+			            group by item_idx
+			        )
+			        where room_count >= (select count(*)
+			                            from hotel_detail_table3
+			                            where item_idx = hotel_num))   
+			    and rownum<![CDATA[ <= ]]>#{countTotal} - (#{amount} * #{page} - #{amount})
+			    <if test="country!=null and !country.equals('')">and country = #{country}</if>)
+		where rn > #{countTotal} - (#{amount} * #{page})
 	</select>
 	
 	
+	<select id="listWithSpot" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="org.worldfinder.domain.ItemVO">
+		select ROW_NUMBER() OVER(ORDER BY item_idx desc) AS rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+                                people, price,  tel, item_Option, item_Url
+		from(
+		    SELECT ROW_NUMBER() OVER(ORDER BY item_idx asc) AS rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+		                                people, price,  tel, item_Option, item_Url from item_table3
+		    where item_idx not in (
+		        select item_idx from (
+		            select item.item_idx, count(*) as "OVERNUM" from item_table3 item,
+		                (select item_idx, sum(people) as "PEOPLE", check_in_date, check_out_date, hotel_idx
+		                from user_oders_table3
+		                where 
+		                (check_in_date >= #{startDaySpot}
+		                and check_out_date<![CDATA[ <= ]]>#{endDaySpot})
+		            and hotel_idx is null
+		            group by item_idx, check_in_date, check_out_date, hotel_idx) oders
+		            where item.item_Idx = oders.item_Idx
+		            and item.people<![CDATA[ < ]]>oders.people + 1
+		            group by item.item_idx
+		        )
+		        where TO_DATE(#{endDaySpot}, 'YY/MM/DD') - TO_DATE(#{startDaySpot}, 'YY/MM/DD') + 1<![CDATA[ <= ]]>overnum)
+		    and item_category = 'spot'
+		    and rownum<![CDATA[ <=]]> #{countTotal} - (#{amount} * #{page} - #{amount})
+		    <if test="country!=null and !country.equals('')">and country = #{country}</if>)
+		where rn > #{countTotal} - (#{amount} * #{page})
+	</select>
 	
 	
+	<select id="listWithHotel" parameterType="org.worldfinder.domain.ItemFilterVO" resultType="org.worldfinder.domain.ItemVO">
+		select ROW_NUMBER() OVER(ORDER BY item_idx desc) AS rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+                                people, price,  tel, item_Option, item_Url
+		from (
+		    SELECT ROW_NUMBER() OVER(ORDER BY item_idx asc) AS rn, item_Idx, country, item_Name, regdate, introduce, image, address, item_Category, 
+		                                people, price,  tel, item_Option, item_Url from item_table3
+		    where item_idx not in(
+		    select hotel_num from
+		    (
+		        select item_idx as "HOTEL_NUM", count(*) as "ROOM_COUNT" from 
+		        (
+		            select detail.item_idx, detail.hotel_idx
+		            from 
+		            (select * from user_oders_table3
+		            where hotel_idx is not null) oders,
+		            hotel_detail_table3 detail
+		            where oders.hotel_idx(+) = detail.hotel_idx
+		            and ((oders.check_in_date<![CDATA[ < ]]> #{endDayHotel}
+		            and oders.check_out_date > #{startDayHotel})
+		            or detail.hotelRoom_people<![CDATA[ < ]]> #{people} )
+		            group by detail.item_idx, detail.hotel_idx
+		        )
+		        group by item_idx
+		    )
+		    where room_count >= (select count(*)
+		                        from hotel_detail_table3
+		                        where item_idx = hotel_num))
+		    and item_category = 'hotel'
+		    and rownum<![CDATA[ <= ]]>#{countTotal} - (#{amount} * #{page} - #{amount})
+		    <if test="country!=null and !country.equals('')">and country = #{country}</if>)
+		where rn > #{countTotal} - (#{amount} * #{page})
+	</select>
 	
+	<select id="getItemDetail" parameterType="int" resultType="org.worldfinder.domain.ItemVO">
+		select * from item_table3
+		where item_idx = #{idx}	
+	</select>
 	
+	<select id="getHotelDetail" parameterType="org.worldfinder.domain.ItemFilterConVO" resultType="org.worldfinder.domain.HotelDetailVO">
+		select * from hotel_detail_table3
+		where hotel_idx not in (
+		    select detail.hotel_idx
+		    from 
+		    (select * from user_oders_table3
+		    where item_idx = #{idx} 
+		    and hotel_idx is not null) oders,
+		    (select * from hotel_detail_table3 
+		    where item_idx = #{idx}) detail
+		    where oders.hotel_idx(+) = detail.hotel_idx
+		    and ((oders.check_in_date<![CDATA[ < ]]>#{endDay}
+		    and oders.check_out_date > #{startDay})
+		    or detail.hotelRoom_people<![CDATA[ <]]> #{people})
+		    )
+		and item_idx = #{idx}
+		order by hotel_room
+	</select>
 	
-	
-	
-	
+	<select id="getNoDate" parameterType="int" resultType="org.worldfinder.domain.UserOrderVO">
+		select * from user_oders_table3
+		where hotel_idx = #{hotelIdx}
+		order by check_in_date
+	</select>
 	
 
 </mapper>

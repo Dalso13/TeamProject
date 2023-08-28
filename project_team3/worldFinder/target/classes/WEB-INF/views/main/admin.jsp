@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,14 +24,13 @@
         }
         #menu {
             width: 80%;
-            margin: auto;
-            margin-top: 10px;
-            background-color: #81fff2;
+            margin: 10px auto auto;
             text-align: center;
             padding-top: 5px;
             padding-bottom: 5px;
         }
-        #menu span{
+        #menu span button{
+            margin-right: 15px;
             cursor: pointer;
         }
         table{
@@ -70,10 +70,11 @@
     <div id="body">
         <%@include file="../include/logo.jsp"%>
         <div id="menu">
-            <span style="border-right: 1px solid black"  data-menu="report" data-report="userPost"><button class="button button--ujarak button--border-thin button--text-thick"> 게시글 신고 내용 </button></span>
-            <span style="border-right: 1px solid black" data-menu="report" data-report="comment"><button class="button button--ujarak button--border-thin button--text-thick">댓글 신고 내용 </button></span>
+            <span   data-menu="report" data-report="userPost"><button class="button button--ujarak button--border-thin button--text-thick"> 게시글 신고 내용 </button></span>
+            <span  data-menu="report" data-report="comment"><button class="button button--ujarak button--border-thin button--text-thick">댓글 신고 내용 </button></span>
             <span data-menu="request"><button class="button button--ujarak button--border-thin button--text-thick">건의 사항 </button></span>
         </div>
+        <hr>
         <div id="main">
             <div id="userPost">
                 <div id="userReport">
@@ -133,8 +134,7 @@
     </div>
     <div id="viewDetails">
         <div id="repMenu" style="height: 100%">
-            제목
-            <div id="req_title"></div>
+            <h3 id="req_title"></h3>
             <br>
             작성자 <div id="req_writer"></div>
             <br>
@@ -243,10 +243,12 @@
             let texts = "";
 
             datas.reportVO.forEach((d) => {
+                let date = new Date(d.reg_date);
+                let dates = date.getFullYear() + "년 " + date.getMonth() + "월 " + date.getDate() + "일"
                     texts += `<tr>`;
                     texts += `<td> <a style="cursor: pointer" onclick="repPostGo(\${d.idx},'\${d.r_category}')">본문 보기</a> </td>
                     <td> <a style="cursor: pointer" onclick="repReason(\${d.idx},'\${d.r_category}')">신고 사유</a> </td>
-                    <td> <a>\${d.reg_date}</a> </td>
+                    <td>\${dates} </td>
                     <td> \${d.r_count} </td>
                     <td> <button type="button" onclick="blind(\${d.idx},'\${d.r_category}')">블라인드 처리</button> </td>
                     </tr>`;
@@ -395,8 +397,10 @@
                         document.getElementById("editor").innerHTML = data.up_content;
                         document.getElementById("req_title").innerHTML = (data["title"]);
                     } else if (keys.includes('c_content')) {
+                        document.getElementById("req_title").innerHTML = "";
                         document.getElementById("editor").innerHTML = data.c_content;
                     } else if (keys.includes('nc_content')){
+                        document.getElementById("req_title").innerHTML = "";
                         document.getElementById("editor").innerHTML = data.nc_content;
                     }
                     document.body.style.background = "rgba(0, 0, 0, 0.5)";
@@ -423,7 +427,7 @@
                         let page = document.getElementById("nowPageNum");
                         if (b == "post"){
                             reportAjax("post", page.value);
-                        } else if (b == "comment" && b == "reply"){
+                        } else if (b == "comment" || b == "reply"){
                             reportAjax("comment", page.value)
                         } else {
                             requestAjax(page.value)
@@ -437,7 +441,8 @@
         function closeRep(){
             if (viewDetails.style.display != "none"){
                 viewDetails.style.display = "none";
-            }else if (viewComment.style.display != "none"){
+            }
+            if (viewComment.style.display != "none"){
                 viewComment.style.display = "none";
             }
             document.body.style.background = "none";

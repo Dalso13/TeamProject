@@ -47,7 +47,7 @@
                     }
                 </script>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('user')">
+            <sec:authorize access="hasAuthority('admin')">
                 <button id="adminGo" class="button button--ujarak button--border-medium button--round-s button--text-thick">관리자</button>
                 <button id="writeGO" class="button button--ujarak button--border-medium button--round-s button--text-thick">나라게시글 작성</button>
                 <script>

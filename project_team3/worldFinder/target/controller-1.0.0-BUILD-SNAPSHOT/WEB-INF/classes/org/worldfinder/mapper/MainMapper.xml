@@ -25,22 +25,22 @@
     <select id="readUserReport" resultType="org.worldfinder.domain.ReportVO" parameterType="org.worldfinder.domain.Criteria">
             <![CDATA[
                 SELECT * FROM
-                    (select rownum rn, idx,r_category  ,r_count from
-                        (select idx , r_category  ,count(*)as r_count from REPORT_TABLE3
-                         GROUP By idx, r_category) t
+                    (select rownum rn, idx,r_category,t.reg_date  ,r_count from
+                        (select idx , r_category  ,count(*)as r_count,reg_date from REPORT_TABLE3
+                         GROUP By idx, r_category,reg_date) t
                     where r_category = 'post' and rownum  <= (#{pageNum} * #{amount})
-                    GROUP By idx, r_category, rownum,r_count ) s
+                    GROUP By idx, r_category, rownum,r_count,t.reg_date ) s
                 where s.rn > ((#{pageNum}-1) * #{amount})
                 order by r_count desc
             ]]>
     </select>
     <select id="readCommentReport" resultType="org.worldfinder.domain.ReportVO" parameterType="org.worldfinder.domain.Criteria">
         <![CDATA[ SELECT * FROM
-                (select rownum rn , idx,r_category  ,r_count from
-                    (select idx , r_category  ,count(*)as r_count from REPORT_TABLE3
-                     GROUP By idx, r_category) t
+                (select rownum rn , idx,r_category,t.reg_date  ,r_count from
+                    (select idx , r_category  ,count(*)as r_count,reg_date from REPORT_TABLE3
+                     GROUP By idx, r_category,reg_date) t
                  where r_category in ('comment','reply') and rownum <= (#{pageNum} * #{amount})
-                 GROUP By idx, r_category,rownum,r_count ) s
+                 GROUP By idx, r_category,rownum,r_count,t.reg_date ) s
             where s.rn > ((#{pageNum}-1) * #{amount})
              order by r_count desc
         ]]>
@@ -104,13 +104,13 @@
     </select>
     
     <select id="repPost" resultType="org.worldfinder.domain.UserPostVO" parameterType="long">
-        select U_WRITER, TITLE,UP_CONTENT ,REG_DATE from USERPOST_TABLE3 where up_idx = #{idx}
+        select U_WRITER, TITLE,UP_CONTENT ,reg_date from USERPOST_TABLE3 where up_idx = #{idx}
     </select>
     <select id="repComment" resultType="org.worldfinder.domain.CommentVO" parameterType="long">
-        select U_WRITER, C_CONTENT, REG_DATE from COMMENT_TABLE3 where C_IDX = #{idx}
+        select U_WRITER, C_CONTENT, reg_date from COMMENT_TABLE3 where C_IDX = #{idx}
     </select>
     <select id="repNestedC" resultType="org.worldfinder.domain.NestedCVO" parameterType="long">
-        select U_WRITER, NC_CONTENT, REG_DATE from NESTED_C_TABLE3 where NC_IDX = #{idx}
+        select U_WRITER, NC_CONTENT, reg_date from NESTED_C_TABLE3 where NC_IDX = #{idx}
     </select>
 
     <select id="repReason" resultType="Map" parameterType="org.worldfinder.domain.ReportVO">

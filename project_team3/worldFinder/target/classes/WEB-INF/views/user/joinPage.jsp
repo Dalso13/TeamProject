@@ -26,9 +26,22 @@
 	#idCk, #pwChk, #pwChk2{
 		position: absolute;
 	}
+	td input {
+		padding: 0 1em;
+		border: 0;
+		height: 38px;
+		border-radius: 30px;
+		background-color:  #f1f3f5;
+	}
+	td input:focus {
+		outline: none;
+	}
+	td input::placeholder {
+		font-weight: 300;
+		color: #aaa;
+	}
 </style>
 <body>
-<%@include file="../include/itemFilter.jsp"%>
 	<div id="body">
 		<div>
 			<%@include file="../include/logo.jsp"%>
@@ -271,20 +284,14 @@
       		if($('#user_id').val() == ""){
 				alert("아이디를 입력해주세요.");
 				return;
-			}else {
-				chk1 = true;
 			}
       		if($('#password').val() == ""){
 				alert("비밀번호를 입력해주세요.");
 				return;
-			}else {
-				chk2 = true;
 			}
       		if($('#password_check').val() == ""){
 				alert("비밀번호를 재입력 하세요.");
 				return;
-			}else {
-				chk3 = true;
 			}
 
 			if($('#name').val() == ""){

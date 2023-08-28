@@ -23,6 +23,20 @@
 	#idCk, #pwChk, #pwChk2{
 		position: absolute;
 	}
+	td input {
+		padding: 0 1em;
+		border: 0;
+		height: 38px;
+		border-radius: 30px;
+		background-color:  #f1f3f5;
+	}
+	td input:focus {
+		outline: none;
+	}
+	td input::placeholder {
+		font-weight: 300;
+		color: #aaa;
+	}
 </style>
 <body>
 <div id="body">

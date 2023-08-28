@@ -17,6 +17,13 @@ public class ItemFilterVO {
 	private Date startDay;				//시작일
 	private Date endDay;				//종료일
 	
+	private Date startDayHotel;			//숙소 이벤트 시작일
+	private Date endDayHotel;			//숙소 이벤트 종료일
+	private Date startDaySpot;			//관광지 이벤트 시작일
+	private Date endDaySpot;			//관광지 이벤트 종료일
+	
+	
 	private int page;					//페이지
 	private int amount;					//한 페이지에 띄울 게시글 수
+	private int countTotal;				//전체 게시글 수
 }

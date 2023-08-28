@@ -29,6 +29,6 @@ public class UserOrderVO {
 	private Date check_Out_Date;	//이벤트 종료일
 	private int people;				//이벤트 인원
 	private int final_Price;		//최종 가격
-	
+	private int hotel_idx;			//호텔 객실 번호
 	
 }

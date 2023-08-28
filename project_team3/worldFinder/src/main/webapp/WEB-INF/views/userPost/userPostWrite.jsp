@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +10,7 @@
 <title>Insert title here</title>
 <script type="text/javascript">
 	$(function() {
+		
 		var editor = document.querySelector('#editor');
 		var btnImg = document.querySelector('#btn-img');
 		var imgSelector = document.querySelector('#img-selector');
@@ -48,6 +50,39 @@
 		$('#post-btn').click(function() {	
 			$('#append').val($('#editor').html());
 		});
+		
+		
+		/* var urlParams = new URLSearchParams(window.location.search);
+        var countryValue = urlParams.get('country');
+        
+        var countryInput = document.querySelector('input[name="country"]');
+        countryInput.value = countryValue; */
+		
+	});
+</script>
+<!-- 페이지 이동 -->
+<script type="text/javascript">
+	$(function() {
+				
+		var operForm = $("#operForm");
+		var pageNumTag = $("input[name='pageNum']").clone();
+		var amountTag = $("input[name='amount']").clone();
+		
+		$("#mainBtn").on('click', function() {
+			operForm.empty();
+			operForm.attr('action', 'main').attr('method', 'get');
+			
+			operForm.append(pageNumTag);
+			operForm.append(amountTag);
+			
+			operForm.submit();
+		});
+		
+		/* $("#resetBtn").on('click', function() {
+			$('form').each(function() {
+				this.reset();
+			});
+		}); */
 	});
 </script>
 <style type="text/css">
@@ -57,29 +92,29 @@
 	}
 
 	#editor img {
-		max-width: 60%;
+		max-width: 40%;
 	}
-	
-	/* #btn-img {
-		display: none;
-	} */
 </style>
 </head>
 <body>
-	<button id="mainBtn" onclick="location.href='/userPost/main'">목록으로 이동</button>
-	<form action="/userPost/write" method="post" role="form">
+	<button id="mainBtn">목록으로 이동</button>
+	<form action="/userPost/write" method="post" id="operForm">
 		<input type="text" placeholder="제목을 입력하세요." name="title">
+		<input name="u_writer" value='<sec:authentication property="principal.username"/>' readonly="readonly">
 		<hr>
 		<button type="button" id="btn-img">IMG<!-- <img src="/resources/image/img-icon.png"/> --></button>
 		<br><br>
 		<div id="editor" contenteditable="true"></div>
 		<input id="img-selector" type="file" style="display: none;">
 		<br>
-		<input type="submit" id="post-btn"value="게시글 등록">
+		<input type="submit" id="post-btn" value="게시글 등록">
 
-		<input type="hidden" name="u_writer" value="tw123">
-		<input type="hidden" name="country" value="대한민국">
+		<input type="hidden" name="${_csrf.parameterName }" value="${_csfr.token }">
+		<input type="hidden" name="country" value="${param.country }">
+		<input type="hidden" name="pageNum" value="${cri.pageNum }">
+		<input type="hidden" name="amount" value="${cri.amount }">
 		<textarea name="up_content" id="append" style="display: none;"></textarea>
 	</form>
+	<!-- <button id="resetBtn">지우기</button> -->
 </body>
 </html>

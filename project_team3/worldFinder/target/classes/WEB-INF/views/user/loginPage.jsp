@@ -21,6 +21,21 @@
 	a{
 		text-decoration: none;
 	}
+	td input {
+		padding: 0 1em;
+		border: 0;
+		height: 38px;
+		width: 100%;
+		border-radius: 30px;
+		background-color:  #f1f3f5;
+	}
+	td input:focus {
+		outline: none;
+	}
+	td input::placeholder {
+		font-weight: 300;
+		color: #aaa;
+	}
 </style>
 <body>
 <%--중간부터 장동완 진행--%>

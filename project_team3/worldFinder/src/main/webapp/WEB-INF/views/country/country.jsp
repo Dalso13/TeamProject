@@ -124,15 +124,6 @@
             </c:when>
             <c:otherwise>
                 <h1>${countryPage.country} 둘러보기</h1>
-                <sec:authorize access="hasAuthority('user')">
-                    <button id="modify" class="button button--ujarak button--border-thin button--text-thick" >수정</button>
-                    <script>
-                        $("#modify").on('click',()=>{
-                            location.href = "/country/modify/${countryPage.country}";
-                        })
-                    </script>
-                </sec:authorize>
-
                 <span>
                     <button id ="itemAll" class="btn"> <span>상품</span></button>
                    <button id ="itemFood" class="btn"> <span>맛집</span></button>
@@ -140,6 +131,14 @@
                         <input type="text" name="country" value="${reCountry}">
                     </form>
                  </span>
+                <sec:authorize access="hasAuthority('admin')">
+                    <button id="modify" class="button button--ujarak button--border-thin button--text-thick" >수정</button>
+                    <script>
+                        $("#modify").on('click',()=>{
+                            location.href = "/country/modify/${countryPage.country}";
+                        })
+                    </script>
+                </sec:authorize>
                 <hr>
                 <div id="titleImg"></div>
                 <br>
@@ -222,7 +221,7 @@
                 location.href = "/userPost/main?country=" + reCountry;
             }
            function postGo(idx){
-                location.href = "/userPost/view?up_idx=" + idx;
+                location.href = "/userPost/view?up_idx=" + idx +"&country="+reCountry;
            }
     </script>
 

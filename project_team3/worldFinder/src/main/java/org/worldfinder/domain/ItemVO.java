@@ -1,5 +1,7 @@
 package org.worldfinder.domain;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,9 +40,9 @@ public class ItemVO {
 	private int people;				//인원수
 	private int price;				//가격
 	private String tel;				//전화번호
-	private String item_Option;			//호텔 객실 번호
+	private String item_Option;			//관광지 유형 (박물관, 공원 등)
 	private String item_Url;				//상품(관광지, 호텔 등의) 관련 링크
 	
-	
+	private List<HotelDetailVO> hotel_detail_list; 	//호텔 객실 정보 리스트
 	
 }
