@@ -14,9 +14,9 @@
 
 	<security:http auto-config="true" use-expressions="true">
 		<!--접근권한 설정한곳-->
-		<security:intercept-url pattern="/adminPage" access="hasAuthority('user')"/>
-		<security:intercept-url pattern="/countryWrite" access="hasAuthority('user')"/>
-		<security:intercept-url pattern="/country/modify/*" access="hasAuthority('user')"/>
+		<security:intercept-url pattern="/adminPage" access="hasAuthority('admin')"/>
+		<security:intercept-url pattern="/countryWrite" access="hasAuthority('admin')"/>
+		<security:intercept-url pattern="/country/modify/*" access="hasAuthority('admin')"/>
 
 		<security:access-denied-handler ref="customAccessDenied"/>
 		<security:form-login login-page="/user/loginPage"/>

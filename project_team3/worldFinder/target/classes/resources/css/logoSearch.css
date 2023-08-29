@@ -46,7 +46,7 @@
     height: auto;
 }
 .clickSpan:hover{
-    background-color: violet;
+    background-color: cornsilk;
 }
 
 #searchBar {
@@ -63,5 +63,5 @@
 }
 
 #focusSpan{
-    background-color: violet;
+    background-color: cornsilk;
 }

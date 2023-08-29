@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -164,8 +166,13 @@ public class UserController {
 	// 회원 정보 수정 페이지
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping(value = "/userModify")
-	public String userModify(UserVO vo, Model model){
-		model.addAttribute("vo",vo);
+	public String userModify(Model model){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) authentication.getPrincipal();
+
+		model.addAttribute("vo",userservice.getUser(user.getUsername()));
+
+		log.info(user.getUsername());
 		return "/user/userModify";
 	}
 	// 회원 정보 수정 처리

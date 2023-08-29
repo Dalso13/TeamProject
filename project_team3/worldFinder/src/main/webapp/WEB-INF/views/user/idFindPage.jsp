@@ -9,6 +9,7 @@
 </head>
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <link rel="stylesheet" href="../../../resources/css/base.css">
+<link rel="stylesheet" href="../../../resources/css/buttonStyle.css">
 <style>
 	#body div, h2{
 		text-align: center;
@@ -59,9 +60,8 @@
 						<input type="text"  class="mail" style="width: 100px" required>
 						<input type="hidden" name="mail" id="mail"> </td>
 				</tr>
-				<tr class="form-label-group">
-					<th> <input class="btn btn-lg btn-secondary btn-block text-uppercase" id="fBtn" type="button" value="아이디찾기" > </th>
-				</tr>
+
+
 				
 				
 				<!-- 이름과 전화번호가 일치하지 않을 때-->
@@ -83,6 +83,7 @@
 <%--		</c:if>--%>
 				
 			</table>
+			<div style="margin: auto"><button  type="button" class="button button--ujarak button--border-thin button--text-thick" id="fBtn">아이디 찾기</button> </div>
 		</form>
 
 		<br>

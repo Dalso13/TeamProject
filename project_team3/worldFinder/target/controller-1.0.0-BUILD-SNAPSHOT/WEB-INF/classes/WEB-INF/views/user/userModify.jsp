@@ -12,6 +12,7 @@
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <link rel="stylesheet" href="../../../resources/css/base.css">
+<link rel="stylesheet" href="../../../resources/css/buttonStyle.css">
 <style>
 	#body div{
 		text-align: center;
@@ -44,20 +45,20 @@
 		<%@include file="../include/logo.jsp"%>
 	</div>
 	<div>
-		<h2> 님의 회원정보 수정</h2>
+		<h2> ${vo.u_name}님의 회원정보 수정</h2>
 		<form id="join_form" method="post" >
 			<table>
 				<tr>
-					<td><input type="hidden" name="u_writer" id="user_id" disabled>
+					<th>아이디</th>
+					<td> ${vo.u_writer} <input type="hidden" name="u_writer" id="user_id" value="${vo.u_writer}" disabled> </td>
 				</tr>
 				<tr>
-					<th>성명</th>
-					<td><input type="text"  id="name" disabled> </td>
+					<td><input type="hidden" name="u_name"  id="name" value="${vo.u_name}" disabled> </td>
 				</tr>
 				<tr>
 					<th>생년월일</th>
 					<td>
-						<input type="text"  id="datepicker" disabled>
+						${vo.birth} <input type="hidden"  id="datepicker" value="${vo.birth}" disabled>
 					</td>
 				</tr>
 				<tr>
@@ -71,23 +72,23 @@
 				</tr>
 				<tr>
 					<th>이메일</th>
-					<td><input type="email" name="mail" id="mail" pattern=".+@gmail\.com" placeholder="example@gmail.com" required>
+					<td><input type="email" name="mail" id="mail" pattern=".+@gmail\.com" placeholder="example@gmail.com" value="${vo.mail}" required>
 						<span id="emailChk"></span> </td>
 				</tr>
 				<tr>
 					<th>성별</th>
 					<td>
-						<input type="radio" name="gender" value="남" id="male" checked="checked" disabled>남
+						<input type="radio" name="gender" value="남" id="male" disabled>남
 						<input type="radio" name="gender" value="여" id="female" disabled>여
 					</td>
 				</tr>
 				<tr>
 					<th>국적</th>
-					<td><input type="text" name="nationality" id="naion" placeholder="대한민국(필수입력)"> </td>
+					<td><input type="text" name="nationality" id="naion" value="${vo.nationality}" placeholder="대한민국(필수입력)"> </td>
 				</tr>
 			</table>
-			<input type="button" value="회원 정보 수정" id="signup-btn">
-			<input type="reset" value="취소">
+			<button type="button" id="signup-btn" class="button button--ujarak button--border-thin button--text-thick">회원 정보 수정</button>
+			<button type="reset"  class="button button--ujarak button--border-thin button--text-thick" >취소</button>
 		</form>
 	</div>
 </div>
@@ -99,7 +100,6 @@
 			$("#join_form span").html("");
 		}
 	}
-
 
 	// 회원가입 버튼 이벤트
 	/*
@@ -197,7 +197,7 @@
 						// 서버에서 다시 값을 보내면 result에 들어감
 						if (result){
 							alert("수정 되었습니다.");
-							location.href = '/';
+							location.href = '/mypage/main';
 						} else {
 							alert("수정 실패");
 						}
@@ -217,5 +217,23 @@
 
 		}); // 회원 가입 처리 끝
 	});
+	let femails = document.getElementById("female");
+	let mail = document.getElementById("mail");
+	let phone = document.querySelectorAll(".phone");
+	onload = function (){
+		const oldPhone = "${vo.phone}";
+		const oldGender = "${vo.gender}";
+
+		if (oldGender.trim() === "여"){
+			femails.checked = true;
+		} else {
+			mail.checked = true;
+		}
+
+		let phones = oldPhone.split("-");
+		phone[0].value = phones[0];
+		phone[1].value = phones[1];
+		phone[2].value = phones[2];
+	}
 </script>
 </html>

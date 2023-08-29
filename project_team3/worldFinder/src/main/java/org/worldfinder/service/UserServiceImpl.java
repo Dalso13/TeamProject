@@ -106,6 +106,11 @@ public class UserServiceImpl implements UserService {
 		return result;
 	}
 
+	@Override
+	public UserVO getUser(String u_writer) {
+		return usermapper.getUser(u_writer);
+	}
+
 
 }
 		

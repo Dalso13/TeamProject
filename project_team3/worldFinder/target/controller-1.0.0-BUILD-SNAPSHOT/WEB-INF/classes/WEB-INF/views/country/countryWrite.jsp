@@ -10,6 +10,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
+    <link rel="stylesheet" href="../../../resources/css/buttonStyle.css">
     <style>
         #details_continent, #county{
             display: none;
@@ -61,9 +62,11 @@
             </button>
         </div></div>
         <hr>
-        <div id="content" contenteditable="true"></div>
+        <div style="overflow: auto" id="content" contenteditable="true"></div>
     </div>
-    <button id="sub">작성 완료</button> <button onclick="location.href = '/'">로비로</button>
+    <button type="button" class="button button--ujarak button--border-thin button--text-thick" id="sub">작성 완료</button>
+    <button type="button" class="button button--ujarak button--border-thin button--text-thick" onclick="location.href = '/'">로비로</button>
+
 </div>
 <form id="realForm" style="display: none">
 

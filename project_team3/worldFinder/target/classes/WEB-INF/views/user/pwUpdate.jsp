@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+	<link rel="stylesheet" href="../../../resources/css/buttonStyle.css">
 	<style>
 		td input {
 			padding: 0 1em;
@@ -36,7 +37,7 @@
 				</tr> 
 			</table>
 		</form>
-		<input type="submit" value="비밀번호 변경">
+		<button type="button" class="button button--ujarak button--border-thin button--text-thick" id="fBtn">비밀번호 찾기</button>
 	</div>
 </body>
 </html>

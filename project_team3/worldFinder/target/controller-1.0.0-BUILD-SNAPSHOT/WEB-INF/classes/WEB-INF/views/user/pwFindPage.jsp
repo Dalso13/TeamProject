@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+	<link rel="stylesheet" href="../../../resources/css/buttonStyle.css">
 	<link rel="stylesheet" href="../../../resources/css/base.css">
 	<style>
 		#body{
@@ -65,7 +66,7 @@
 
 			</table>
 		</form>
-		<input type="button" id="fBtn" value="비밀번호 찾기">
+		<button type="button" class="button button--ujarak button--border-thin button--text-thick" id="fBtn">비밀번호 찾기</button>
 	</div>
 
 	<script type="text/javascript">

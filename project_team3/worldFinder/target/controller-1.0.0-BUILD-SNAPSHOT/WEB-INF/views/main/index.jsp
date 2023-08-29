@@ -45,6 +45,9 @@
                     document.getElementById("logout").onclick = function () {
                         location.href = "/user/logout";
                     }
+                    document.getElementById("myPage").onclick = function () {
+                        location.href = "/mypage/main";
+                    }
                 </script>
             </sec:authorize>
             <sec:authorize access="hasAuthority('admin')">

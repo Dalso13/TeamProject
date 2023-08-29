@@ -3,6 +3,7 @@ pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
+  <link rel="stylesheet" href="../../../resources/css/buttonStyle.css">
   <style>
     #details_continent, #county{
       display: none;
@@ -49,9 +50,10 @@ pageEncoding="UTF-8"%>
       </button>
     </div></div>
     <hr>
-    <div id="content" contenteditable="true">${countryPage.content} </div>
+    <div style="overflow: auto" id="content" contenteditable="true">${countryPage.content} </div>
   </div>
-  <button id="update">수정하기</button> <button id="delete">삭제하기</button>
+  <button class="button button--ujarak button--border-thin button--text-thick" id="update">수정하기</button>
+  <button class="button button--ujarak button--border-thin button--text-thick" id="delete">삭제하기</button>
 </div>
 <form  id="realForm">
 

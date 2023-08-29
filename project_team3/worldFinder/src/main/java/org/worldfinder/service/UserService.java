@@ -32,6 +32,8 @@ public interface UserService {
 
 	// 회원 정보 수정
 	public Map<String,Boolean> userModify(UserVO vo);
+
+	public UserVO getUser(String u_writer);
 	
 	
 }

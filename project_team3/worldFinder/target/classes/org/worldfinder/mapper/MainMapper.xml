@@ -25,22 +25,22 @@
     <select id="readUserReport" resultType="org.worldfinder.domain.ReportVO" parameterType="org.worldfinder.domain.Criteria">
             <![CDATA[
                 SELECT * FROM
-                    (select rownum rn, idx,r_category,t.reg_date  ,r_count from
-                        (select idx , r_category  ,count(*)as r_count,reg_date from REPORT_TABLE3
-                         GROUP By idx, r_category,reg_date) t
+                    (select rownum rn, idx,r_category,reg_date  ,r_count from
+                        (select idx , r_category  ,count(*)as r_count,min(REG_DATE) as reg_date from REPORT_TABLE3
+                         GROUP By idx, r_category) t
                     where r_category = 'post' and rownum  <= (#{pageNum} * #{amount})
-                    GROUP By idx, r_category, rownum,r_count,t.reg_date ) s
+                    GROUP By idx, r_category, rownum,r_count,reg_date ) s
                 where s.rn > ((#{pageNum}-1) * #{amount})
                 order by r_count desc
             ]]>
     </select>
     <select id="readCommentReport" resultType="org.worldfinder.domain.ReportVO" parameterType="org.worldfinder.domain.Criteria">
         <![CDATA[ SELECT * FROM
-                (select rownum rn , idx,r_category,t.reg_date  ,r_count from
-                    (select idx , r_category  ,count(*)as r_count,reg_date from REPORT_TABLE3
-                     GROUP By idx, r_category,reg_date) t
+                (select rownum rn , idx,r_category,reg_date  ,r_count from
+                    (select idx , r_category  ,count(*)as r_count,min(REG_DATE) as reg_date from REPORT_TABLE3
+                     GROUP By idx, r_category) t
                  where r_category in ('comment','reply') and rownum <= (#{pageNum} * #{amount})
-                 GROUP By idx, r_category,rownum,r_count,t.reg_date ) s
+                 GROUP By idx, r_category,rownum,r_count,reg_date ) s
             where s.rn > ((#{pageNum}-1) * #{amount})
              order by r_count desc
         ]]>
