@@ -46,7 +46,7 @@
                         location.href = "/user/logout";
                     }
                     document.getElementById("myPage").onclick = function () {
-                        location.href = "/mypage/main";
+                        location.href = "/myPage/main";
                     }
                 </script>
             </sec:authorize>

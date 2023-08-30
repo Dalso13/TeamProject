@@ -40,9 +40,6 @@
         #commentReport th , #userReport th{
             width: 160px;
         }
-        thead {
-            border-bottom: 1px solid black;
-        }
         #request th{
             width: 160px;
         }
@@ -63,6 +60,95 @@
             display: inline-block;
             width: 50px;
             cursor: pointer;
+        }
+        #editor img {
+            max-width: 70%;
+        }
+        #editor , #repCommentList {
+            overflow: auto;
+        }
+        #repMenu, #viewComment{
+            padding: 10px;
+            border: 1px solid gray;
+        }
+    </style>
+    <style>
+        table {
+            border: 1px #99ccff solid;
+            font-size: .9em;
+            box-shadow: 0 2px 5px rgba(0,0,0,.25);
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        thead {
+            font-weight: bold;
+            color: #fff;
+            background: #99ccff;
+        }
+
+        td, th {
+            padding: 1em .5em;
+            vertical-align: middle;
+        }
+
+        td {
+            border-bottom: 1px solid rgba(0,0,0,.1);
+            background: #fff;
+        }
+
+        a {
+            color: #73685d;
+        }
+
+
+        @media all and (max-width: 768px) {
+
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            th {
+                text-align: right;
+            }
+
+            table {
+                position: relative;
+                padding-bottom: 0;
+                border: none;
+                box-shadow: 0 0 10px rgba(0,0,0,.2);
+            }
+
+            thead {
+                float: left;
+                white-space: nowrap;
+            }
+
+            tbody {
+                overflow-x: auto;
+                overflow-y: hidden;
+                position: relative;
+                white-space: nowrap;
+            }
+
+            tr {
+                display: inline-block;
+                vertical-align: top;
+            }
+
+            th {
+                border-bottom: 1px solid #99ccff;
+            }
+
+            td {
+                border-bottom: 1px solid #e5e5e5;
+            }
         }
     </style>
 </head>
@@ -113,7 +199,7 @@
                 </div>
                 <div id="request">
                     <table>
-                        <thead>
+                        <thead >
                         <tr>
                             <th>유형</th>
                             <th>장소명</th>
@@ -134,7 +220,7 @@
     </div>
     <div id="viewDetails">
         <div id="repMenu" style="height: 100%">
-            <h3 id="req_title"></h3>
+            <h2 id="req_title"></h2>
             <br>
             작성자 <div id="req_writer"></div>
             <br>
