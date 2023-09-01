@@ -1,16 +1,20 @@
 package org.worldfinder.service;
 
 
+import java.nio.file.spi.FileSystemProvider;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.worldfinder.domain.Criteria;
+import org.springframework.transaction.annotation.Transactional;
+import org.worldfinder.domain.CountryClassVO;
 import org.worldfinder.domain.HotelDetailVO;
 import org.worldfinder.domain.ItemFilterConVO;
 import org.worldfinder.domain.ItemFilterVO;
@@ -27,34 +31,28 @@ public class ManagerItemServiceImpl implements ManagerItemService{
 	@Autowired
 	private ItemMapper mapper;
 	
-//	@Override
-//	public int countItemList() {
-//		return mapper.countItemList();
-//	}
 	
 //	@Override
-//	public List<ItemVO> getItemList() {
-//		log.info("service getItemList...");
-//		return mapper.getItemList();
+//	public void registerItem(ItemVO ivo) {
+//		log.info("service registeritem...");
+//		mapper.insertItem(ivo);
 //	}
 	
-	@Override
-	public void registerItem(ItemVO ivo) {
-		log.info("service registeritem...");
-		mapper.insertItem(ivo);
-	}
-	
+	//@Transactional
 	@Override
 	public void removeItem(int item_Idx) {
 		log.info("service removeitem...");
+		
+		mapper.itemOrderDelete(item_Idx);
+		mapper.removeHotelDetail(item_Idx);		
 		mapper.removeItem(item_Idx);
 	}
 	
-	@Override
-	public void updateItem(ItemVO ivo) {
-		log.info("service updateItem...");
-		mapper.updateItem(ivo);
-	}
+//	@Override
+//	public void updateItem(ItemVO ivo) {
+//		log.info("service updateItem...");
+//		mapper.updateItem(ivo);
+//	}
 	
 //	@Override
 //	public List<ItemVO> getListWithPaging(Criteria cri) {
@@ -199,6 +197,7 @@ public class ManagerItemServiceImpl implements ManagerItemService{
 		return itemFiltervo;
 	}
 
+	//날짜에 하루 더하기
 	private String AddDate(String strDate, int year, int month, int day) throws ParseException {
         SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd");
         
@@ -231,6 +230,18 @@ public class ManagerItemServiceImpl implements ManagerItemService{
 		return ivo;
 	}
 	
+	//itemIdx로만 아이템 세부정보 가져오기
+	@Override
+	public ItemVO getItemWithIdx(int itemIdx) {
+		//아이템 기본정보 가져오기
+		ItemVO ivo = mapper.getItemDetail(itemIdx);
+		
+		//숙소 객실 정보도 가져오기
+		ivo.setHotel_detail_list(mapper.getAllHotelDetail(itemIdx));
+		
+		return ivo;
+	}
+	
 	private ItemFilterConVO setIcvoDate(ItemFilterConVO icvo) throws ParseException {
 		
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -252,39 +263,199 @@ public class ManagerItemServiceImpl implements ManagerItemService{
 		return icvo;
 	}
 	
+	
+	
 	@Override
-	public List<String> getNoDate(int hotelIdx) throws ParseException {
+	public Map<String, Object> getNoDate(int hotelIdx) throws ParseException {
 		
 		
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 		List<UserOrderVO> list = mapper.getNoDate(hotelIdx);
-		System.out.println("service start");
-		System.out.println("service list : " + list);
 		
-		List<String> result = new ArrayList<String>();
+		List<String> resultF = new ArrayList<String>();
+		List<String> resultT = new ArrayList<String>();
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		
 		String inStr = "", outStr = "";
-		System.out.println("service start2");
+
 		for(UserOrderVO uvo : list) {
 			inStr = fmt.format(uvo.getCheck_In_Date());
 			outStr = fmt.format(uvo.getCheck_Out_Date());
 			
-			System.out.println("service start3");
+			resultT.add(deleteZero(inStr));
+			resultT.add(deleteZero(outStr));
+			
 			while(true) {
-				
-				System.out.println("inStr : " + inStr);
-				result.add(deleteZero(inStr));
-				AddDate(inStr, 0, 0, 1);
+
+				resultF.add(deleteZero(inStr));
+				inStr = AddDate(inStr, 0, 0, 1);
 				
 				
 				if(dateToInt(inStr) > dateToInt(outStr)) {
 					break;
 				}	
 			}
+
 		}
+		
+		List<String> repliDate = mapper.dupliDate(hotelIdx);
+		
+		for(String date : repliDate) {
+			resultT.remove(deleteZero(date));
+			resultT.remove(deleteZero(date));
+		}
+		
+		
+		result.put("resultT", resultT);
+		result.put("resultF", resultF);
+		
 		System.out.println("service result : " + result);
 		
 		return result;
 	}
+	
+	
+	@Override
+	public Map<String, Object> getNoDateSpot(int itemIdx, int people, String startDay) throws ParseException {
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		List<String> resultT = new ArrayList<String>();
+		List<String> resultF = new ArrayList<String>();
+		
+		for(String date : mapper.getNoDateSpot(itemIdx, people)) {
+			resultT.add(deleteZero(date));
+		}
+		for(String date : mapper.getNoDateSpotRep(itemIdx, people)) {
+			resultF.add(deleteZero(date));
+		}
+		
+		result.put("resultT", resultT);
+		result.put("resultF", resultF);
+		result.put("fullPeople", mapper.getFullPeople(itemIdx));
+		
+		String reservePeople = mapper.reservePeople(itemIdx, startDay);
+		
+		if(reservePeople != null) {
+			result.put("reservePeople", Integer.parseInt(reservePeople));
+		}
+		else {
+			result.put("reservePeople", 0);
+		}
+		return result;
+	}
+	
+
+//	@Override
+//	public int semiItemInsert() {
+//		mapper.semiItemInsert();
+//		
+//		return mapper.semiItemIdx();
+//	}
+	
+	@Override
+	public void itemInsertSet() {
+		if(mapper.isZeroIdx() > 0) {
+			mapper.deleteZero();
+		}
+		else {
+			mapper.semiItemInsert();
+		}
+		
+	}
+	
+	@Override
+	public Map<String, Object> hotelRoomInsert(HotelDetailVO hdvo) {
+		
+		Map<String , Object> result = new HashMap<String, Object>();
+		
+		if(mapper.hotelRoomUnique(hdvo) != 0) {
+			result.put("eCode", 1);
+			result.put("list", null);
+			return result;
+		}
+		
+		if(mapper.hotelRoomInsert(hdvo) > 0) {
+			result.put("eCode", 0);
+			result.put("list", mapper.hotelRoomGet(hdvo.getItem_idx()));
+			return result;
+		}
+		else {
+			result.put("eCode", 1);
+			result.put("list", null);
+			return result;
+		}
+	}
+	
+	//@Transactional
+	@Override
+	public Map<String, Object> hotelRoomDelete(int hotelIdx, int item_idx) {
+		log.info("service hotelRoomDelete...");
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		mapper.hotelOrderDelete(hotelIdx);
+		if(mapper.hotelRoomDelete(hotelIdx) > 0) {
+			List<HotelDetailVO> list = mapper.hotelRoomGet(item_idx);
+			result.put("list", list);
+			if(list.size() == 0) {
+				result.put("eCode", 2);
+			}
+			else {
+				result.put("ecode", 0);
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public Map<String, Object> allRoomDelete(int item_idx) {
+		mapper.allRoomDelete(item_idx);
+		return null;
+	}
+	
+	@Override
+	public int realItemInsert(ItemVO ivo) {
+		
+		if(ivo.getItem_Category().equals("hotel")) {
+			int people = mapper.maxPeople(0);
+			ivo.setPeople(people);
+		}
+			
+		mapper.realItemInsert(ivo);
+		mapper.realIdxUpdate();
+		return 0;
+	}
+	
+	@Override
+	public HotelDetailVO getOnehotelDetail(int item_idx, int hotel_idx) {
+		return mapper.getOnehotelDetail(item_idx, hotel_idx);
+	}
+	
+	
+	@Override
+	public CountryClassVO countryCategory(String country) {
+	   return  mapper.countryCategory(country);
+	}
+	
+	@Override
+	public void updateRoom(HotelDetailVO hdvo) {
+		mapper.updateRoom(hdvo);
+		int poeple = mapper.maxPeople(hdvo.getItem_idx());
+		mapper.updatePeople(hdvo.getItem_idx(), poeple);
+	}
+	
+	@Override
+	public void oneItemUpdate(ItemVO ivo) {
+		mapper.oneItemUpdate(ivo);
+	}
+	
+	@Override
+	public List<HotelDetailVO> getAllHotelRoom(int item_idx) {
+		return mapper.hotelRoomGet(item_idx);
+	}
+	
+	
 	
 	//날짜 형식을 2023-01-01 => 2023-1-1로 변경
 	private String deleteZero(String dateStr) {
@@ -294,10 +465,10 @@ public class ManagerItemServiceImpl implements ManagerItemService{
 		String d = dateStr.substring(8, 10);
 		
 		if(isNumeric(m) && Integer.parseInt(m) < 10) {
-			m.replaceAll("0", "");
+			m = m.replaceAll("0", "");
 		}
 		if(isNumeric(d) && Integer.parseInt(d) < 10) {
-			d.replaceAll("0", "");
+			d = d.replaceAll("0", "");
 		}
 		dateStr = y + "-" + m + "-" + d;
 		
@@ -314,17 +485,18 @@ public class ManagerItemServiceImpl implements ManagerItemService{
         }
     }
 	
+	//크기비교용 : 날짜 int로 변경
 	private int dateToInt(String s) {
 		
 		int n;
-		s.replace("-", "");
+		s = s.replace("-", "");
 		if(isNumeric(s)) {
+			
 			n = Integer.parseInt(s);
 		}
 		else {
 			n = 21000101;
 		}
-		
 		return n;
 	}
 	

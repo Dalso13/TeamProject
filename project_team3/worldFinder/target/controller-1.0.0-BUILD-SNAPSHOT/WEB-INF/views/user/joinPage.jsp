@@ -201,7 +201,6 @@
 					//서버와 통신성공시 실행할 내용 작성.
 					console.log('통신 성공!' + result);
       		 	if(result === 'available'){
-      		 		 $('#user_id').css('background-color', 'skyblue');
       		 		 $('#idCk').html('<b style="font-size: 14px; color: blue">현재 아이디 사용가능.</b>');
       		 		 chk1 = true;
       		 	}else{
@@ -226,21 +225,18 @@
   		
   		// 비밀번호 공백 확인 
   		if ($(event.target).val() === ''){
-  			$(event.target).css('background', 'skyblue');
 			$('#pwChk').html('<b style="font-size: 14px; color:red">[비밀번호를 입력해주세요]</b>');
 			chk2 = false;
 			// 입력했다가 다시 잘못입력할 수 있으므로 모든 조건식에 넣어야함
   		}
   		// 비밀번호 유효성 검사 
   		else if (!getPwCheck.test($(event.target).val()) || $(event.target).val().length < 8){
-  			$(event.target).css('background', 'skyblue');
-			$('#pwChk').html('<b style="font-size: 14px; color:blue">[비밀번호는 특수문자 포함 8자 이상입니다.]</b>');
+			$('#pwChk').html('<b style="font-size: 14px; color:red">[비밀번호는 특수문자 포함 8자 이상입니다.]</b>');
 			chk2 = false;
 			// 입력했다가 다시 잘못입력할 수 있으므로 모든 조건식에 넣어야함
   		}
   		// 통과 
   		else{
-  			$(event.target).css('background', 'skyblue');
 			$('#pwChk').html('<b style="font-size: 14px; color:blue">[비밀번호 사용가능.]</b>');
 			chk2 = true;
 			// 입력값 검증 성공 표시 
@@ -253,22 +249,19 @@
   		
   		// 비밀번호 확인 공백 검증
   		if ($(event.target).val() === ''){
-  			$(event.target).css('background', 'pink');
-			$('#pwChk2').html('<b style="font-size: 14px; color:blue">[비밀번호 확인은 필수 정보 입니다.]</b>');
+			$('#pwChk2').html('<b style="font-size: 14px; color:red">[비밀번호 확인은 필수 정보 입니다.]</b>');
 			
 			chk3 = false;
 			// 입력했다가 다시 잘못입력할 수 있으므로 모든 조건식에 넣어야함
 			
 		// 비밀번호 확인란 유효성 검증 (일치하는지)
   		} else if($(event.target).val() !== $('#password').val()){
-  			// 값들이 같지 않다면 
-  			$(event.target).css('background', 'pink');
-			$('#pwChk2').html('<b style="font-size: 14px; color:blue">[입력한 비밀번호가 일치하지 않습니다.]</b>');
+  			// 값들이 같지 않다면
+			$('#pwChk2').html('<b style="font-size: 14px; color:red">[입력한 비밀번호가 일치하지 않습니다.]</b>');
 			
 			chk3 = false;
 			// 입력했다가 다시 잘못입력할 수 있으므로 모든 조건식에 넣어야함
   		}else{
-  			$(event.target).css('background', 'aqua');
 			$('#pwChk2').html('<b style="font-size: 14px; color:skyblue">[비밀번호 확인 완료.]</b>');
 			
 			chk3 = true;

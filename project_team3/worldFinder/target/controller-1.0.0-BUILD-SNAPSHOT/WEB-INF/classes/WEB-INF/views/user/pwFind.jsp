@@ -83,16 +83,19 @@
 			return;
 		}
 		if (!chk1){
+			alert("비밀번호를 정확히 입력하세요.");
 			inform.u_pw.focus();
+			return;
 		}
 		if (inform.u_pw_check.value == "") {
-			alert("비밀번호를 입력하세요.");
+			alert("비밀번호를 확인란을 입력해주세요.");
 			inform.u_pw_check.focus();
 			return;
 		}
 		if (inform.u_pw.value != inform.u_pw_check.value) {
 			alert("비밀번호가 일치하지 않습니다")
 			inform.u_pw_check.focus();
+			return;
 		}
 
 		inform.u_pw_check.disabled = true;

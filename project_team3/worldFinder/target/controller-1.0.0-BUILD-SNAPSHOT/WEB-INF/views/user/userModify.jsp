@@ -218,7 +218,7 @@
 		}); // 회원 가입 처리 끝
 	});
 	let femails = document.getElementById("female");
-	let mail = document.getElementById("mail");
+	let male = document.getElementById("male");
 	let phone = document.querySelectorAll(".phone");
 	onload = function (){
 		const oldPhone = "${vo.phone}";
@@ -227,7 +227,7 @@
 		if (oldGender.trim() === "여"){
 			femails.checked = true;
 		} else {
-			mail.checked = true;
+			male.checked = true;
 		}
 
 		let phones = oldPhone.split("-");

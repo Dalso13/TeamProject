@@ -23,7 +23,7 @@ public class HotelDetailVO {
 	private String hotel_room;
 	private int hotelRoom_price;
 	private int hotelRoom_size;
-	private String view;
+	private String hotelRoom_view;
 	private String hotel_category;
 	private int hotelRoom_people;
 	

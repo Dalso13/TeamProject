@@ -99,7 +99,7 @@
 
     <!--임시로-->
     <select id="userPostSample" resultType="org.worldfinder.domain.UserPostVO" parameterType="String">
-        select UP_IDX, U_WRITER, TITLE, REG_DATE, HIT, UP_LIKE from
+        select UP_IDX, U_WRITER, TITLE, REG_DATE, HIT, UP_LIKE , thumbnail from
             USERPOST_TABLE3 where COUNTRY = #{country} and <![CDATA[ ROWNUM <= 6 ]]> and up_hide = 'false' order by HIT desc
     </select>
     

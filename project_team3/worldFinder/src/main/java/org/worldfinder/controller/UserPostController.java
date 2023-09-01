@@ -115,9 +115,10 @@ public class UserPostController {
 
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/write")
-	public String register(Model model, Criteria cri) {
+	public String register(Model model, Criteria cri, @RequestParam("country") String country) {
 		log.info("userPost controller register(get)..");
 		model.addAttribute("cri", cri);
+		model.addAttribute("country", country);
 		return "userPost/userPostWrite";
 	}
 
@@ -151,7 +152,7 @@ public class UserPostController {
 			rttr.addFlashAttribute("result", "success");
 		}
 		rttr.addAttribute("country", country);
-		return "redirect:/userPost/main";
+		return "redirect:/userPost/view?up_idx=" + vo.getUp_idx();
 	}
 
 	@PostMapping("/delete")

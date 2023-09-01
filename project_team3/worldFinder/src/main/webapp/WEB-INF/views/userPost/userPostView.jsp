@@ -123,7 +123,9 @@ div#editor {
 				<img id="scrapImg" src="../../../resources/image/userPost/cancleScrap.png" style="border: none; width:20px; height: 20px; cursor: pointer;">
 			</button>
 			
-			<button id="reportPost-btn">신고</button>
+			<button id="reportPost-btn">
+				<img id="scrapImg" src="../../../resources/image/userPost/siren.png" style="border: none; width:20px; height: 20px; cursor: pointer;">
+			</button>
 			
 		</form>
 	</div>

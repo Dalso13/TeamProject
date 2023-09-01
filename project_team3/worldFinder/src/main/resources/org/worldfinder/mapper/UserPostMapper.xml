@@ -6,8 +6,8 @@
 <mapper namespace="org.worldfinder.mapper.UserPostMapper">
    <select id="getAllList" resultType="org.worldfinder.domain.UserPostVO">
 		<![CDATA[
-			select rownum rn, up_idx, u_writer, country, title, up_content, reg_date, hit, up_like, up_hide from
-				(select rownum rn, up_idx, u_writer, country, title, up_content, reg_date, hit, up_like, up_hide
+			select rownum rn, up_idx, u_writer, country, title, up_content, reg_date, hit, up_like, up_hide, thumbnail from
+				(select rownum rn, up_idx, u_writer, country, title, up_content, reg_date, hit, up_like, up_hide, thumbnail
 				 from userpost_table3
 				 where rownum <= #{cri.pageNum} * #{cri.amount} order by up_idx desc)
 			where rn > (#{cri.pageNum} -1) * #{cri.amount} and country = #{map2.country}
@@ -23,19 +23,20 @@
 	</select>
 
 	<insert id="postInsert" parameterType="org.worldfinder.domain.UserPostVO">
-		insert into userpost_table3(up_idx, u_writer, country, title, up_content)
+		insert into userpost_table3(up_idx, u_writer, country, title, up_content, thumbnail)
 		values(
 			userpost_seq3.nextval,
 			#{u_writer},
 			#{country},
 			#{title},
-			#{up_content}
+			#{up_content},
+			#{thumbnail}
 		)
 	</insert>
 
 	<update id="postUpdate" parameterType="org.worldfinder.domain.UserPostVO">
 		update userpost_table3 set
-			title = #{title}, up_content = #{up_content}, update_date = sysdate
+			title = #{title}, up_content = #{up_content}, update_date = sysdate, thumbnail = #{thumbnail}
 		where up_idx = #{up_idx}
 	</update>
 

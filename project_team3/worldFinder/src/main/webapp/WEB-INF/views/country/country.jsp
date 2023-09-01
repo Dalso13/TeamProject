@@ -80,7 +80,9 @@
         .userBox .postImg {
             display: block;
             width: 100%;
+            height: 100px;
             padding: 0;
+            object-fit: contain;
         }
         .userBox .heading {
             font-size: 28px;
@@ -159,7 +161,16 @@
                                 <%--이미지--%>
                                 <c:forEach items="${userPostSample}" var="user">
                                     <span class="userBox" onclick="postGo(${user.up_idx})">
-                                        <img class="postImg" src="../../../resources/image/logo.jpg">
+                                        <div style="background-color: white">
+                                            <c:choose>
+                                                <c:when test="${empty user.thumbnail }">
+                                                   <img class="postImg" src="../../../resources/image/logo.jpg">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img class="postImg" src="${user.thumbnail}">
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
                                         <h1 class="heading">${user.title}</h1>
                                         <div class="postData">
                                             <span class="postData">${user.reg_date}</span>

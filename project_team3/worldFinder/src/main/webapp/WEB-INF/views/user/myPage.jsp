@@ -32,18 +32,17 @@
     }
 </style>
 <script>
-	$(document).ready(function() {
-		
-		$("#main > #myInfo").show();
-		
+	$(function() {
+		//$("#myInfo").show(); // 초기에 내 정보 확인 부분을 보여줌
+	    $("#myInfoBtn").click();
+
 	    $(".myPageMenu").click(function() {
 	        var menu = $(this).parent().data("menu");
 	        $("#main > div").hide();  // 모든 div를 숨김
 	        $("#" + menu).show();     // 선택한 메뉴에 해당하는 div를 보여줌
 	    });
-	    
+
 	});
-	
 </script>
 </head>
 <body>
@@ -176,14 +175,16 @@
 					dataType: "json",
 					success: function(result) {
 						var str = '';
+						var userModifyUrl = '/user/userModify';
+						var pwFind = '/user/pwFind';
 						for (var i = 0; i < result.length; i++) {
 							str += '아이디 <input type="text" name="u_writer" value="' + result[i].u_writer + '" readonly="readonly"> <br>'
 							str += '성명 <input type="text" name="u_pw" value="' + result[i].u_name +'" readonly="readonly"> <br>';
 							str += '생년월일 <input type="text" name="u_name" value="' + result[i].birth + '" readonly="readonly"> <br>';
 							str += '연락처 <input type="text" name="phone" value="' + result[i].phone + '" readonly="readonly"> <br>';
 							str += '성별 <input type="radio" name="gender" readonly="readonly" checked>' + result[i].gender + ' <br>';
-							str += '<input type="button" onclick="location.href=' + "/" + '" value="회원정보 변경"> <br>';
-							str += '<input type="button" onclick="location.href=' + "/" + '" value="비밀번호 변경"	>';
+							str += '<input type="button" onclick="location.href=\'' + userModifyUrl + '\'" value="회원정보 변경"> <br>';
+							str += '<input type="button" onclick="location.href=\'' + pwFind + '\'" value="비밀번호 변경"	>';
 						}
 						myInfoList.html(str);
 					},

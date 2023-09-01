@@ -38,7 +38,7 @@
 			<%@include file="../include/logo.jsp"%>
 		</div>
 		<h2>비밀번호 찾기</h2>
-		<form method="get" id='inform' action="/user/pwFind">
+		<form method="post" id='inform' action="/user/pwFind">
 			<table>
 				<tr>
 					<th>아이디</th>

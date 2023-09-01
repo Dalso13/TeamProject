@@ -37,8 +37,8 @@ pageEncoding="UTF-8"%>
   <h1>${countryPage.country}게시글 수정</h1>
   <div id="imgBody">
     <label for="input_image" id="realImage">대표 이미지 선택</label> <br>
-    <span id="oldImg"></span>
-    <img style="width: 100px; margin-top: 10px" id="preview_image">
+    <span style="height: 70px;" id="oldImg"></span>
+    <img style="height: 70px; margin-top: 10px" id="preview_image">
     <input type="file" name="emage" accept="image/*" id="input_image" style="display: none" >
     <input type="file"  accept="image/*" id="backUpImg" style="display: none">
   </div>

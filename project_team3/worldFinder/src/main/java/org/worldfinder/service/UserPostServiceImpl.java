@@ -85,21 +85,14 @@ public class UserPostServiceImpl implements UserPostService {
    @Override
    public void like(LikeVO vo) {
 	  log.info("like.." + vo);
-	   
-	  // 좋아요 상태 확인
-	  //boolean isLiked = mapper.checkLike(vo);
-	   
-	  if(!mapper.checkLike(vo)) {	// 이미 좋아요 누른 경우는 무시
-		  mapper.like(vo);	
-	  } else {
+	  
+	  // 좋아요 누름 : true, 좋아요 안 누름 : false
+	  if (mapper.checkLike(vo)) {	// 이미 좋아요 누른 경우 좋아요 취소
 		  mapper.dislike(vo);
+	  } else {
+		  mapper.like(vo);			// 좋아요 안 눌렀으면 좋아요 추가
 	  }
-	   
-		/*
-		 * if (isLiked) { // true: 데이터에 값 있음 & 좋아요 누름 mapper.dislike(vo); return
-		 * "dislike"; } else { // false : 데이터에 값 없음 & 좋아요 안 누름 mapper.like(vo); return
-		 * "like"; }
-		 */
+	  
    }
    
    @Override
@@ -107,17 +100,10 @@ public class UserPostServiceImpl implements UserPostService {
 	  log.info("dislike.." + vo);
 	  System.out.println("dislike 실행");
 	   
-	  // 좋아요 상태 확인
-	  //boolean isLiked = mapper.checkLike(vo);
-	   
+	  // checkLike가 true이면 좋아요 눌렀다는 의미
 	  if (mapper.checkLike(vo)) {	// 좋아요 누른 경우만 취소
 		  mapper.dislike(vo);
 	  }
-	   
-		/*
-		 * if (isLiked) { mapper.dislike(vo); // 좋아요 취소 return "dislike"; } else {
-		 * return "none"; // 이미 좋아요 취소 }
-		 */
    }
    
    @Override

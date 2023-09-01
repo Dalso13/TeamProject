@@ -66,15 +66,20 @@ public class UserPostCommentController {
 		return new ResponseEntity<>(comService.getCommentList(up_idx), HttpStatus.OK);
 	}
 	
-	// 댓글(c_idx)
-	/*
-	 * @GetMapping(value="/{c_idx}", produces = {MediaType.APPLICATION_XML_VALUE,
-	 * MediaType.APPLICATION_JSON_VALUE}) public ResponseEntity<CommentVO>
-	 * get(@PathVariable("c_idx") long c_idx) {
-	 * log.info("userComment controller get.." + c_idx);
-	 * 
-	 * return new ResponseEntity<>(comService.viewComment(c_idx), HttpStatus.OK); }
-	 */
+	// 수정
+	@PutMapping(value = "/{c_idx}", consumes = "application/json", produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String modify(@PathVariable("c_idx") long c_idx, @RequestBody CommentVO vo) {
+		log.info("userComment controller modify.." + vo);
+		log.info("userComment controller modify.." + c_idx);
+
+		vo.setC_idx(c_idx);
+
+		String result = Integer.toString(comService.modifyComment(vo));
+
+		return result;
+
+	}
 	
 	// 삭제
 	@DeleteMapping(value="/{c_idx}", produces = MediaType.TEXT_PLAIN_VALUE)
@@ -87,20 +92,6 @@ public class UserPostCommentController {
 		return result;
 	}
 	
-	// 수정
-	@PutMapping(value="/{c_idx}", consumes = "application/json", produces = MediaType.TEXT_PLAIN_VALUE)
-	@ResponseBody
-	public String modify(@PathVariable("c_idx") long c_idx, @RequestBody CommentVO vo) {
-		log.info("userComment controller modify.." + vo);
-		log.info("userComment controller modify.." + c_idx);
-		
-		vo.setC_idx(c_idx);
-		
-		String result = Integer.toString(comService.modifyComment(vo));
-		
-		return result;
-		
-	}
 	
 	// 총 댓글 수 ------------------------------
 	@GetMapping("/total/{up_idx}")
@@ -110,9 +101,8 @@ public class UserPostCommentController {
 	    return new ResponseEntity<>(totalComment, HttpStatus.OK);
 	}
 	
-	
-	
 	// 좋아요 ------------------------------
+	/*
 	@PostMapping(value = "/like", consumes = "application/json", produces = MediaType.TEXT_PLAIN_VALUE)
 	@ResponseBody
 	public ResponseEntity<String> likeComment(@RequestBody Map<String, Long> requestBodyMap, Authentication authentication) {
@@ -175,7 +165,7 @@ public class UserPostCommentController {
 		}
 		
 	}
-	
+	*/
 	
 	
 	// 대댓글(reply) --------------------------------------
@@ -198,17 +188,6 @@ public class UserPostCommentController {
 		
 		return new ResponseEntity<>(comService.getNestedComList(c_idx), HttpStatus.OK);
 	}
-	
-	// 대댓글(nc_idx)
-	/*
-	 * @GetMapping(value="/reply/{nc_idx}", produces =
-	 * {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	 * public ResponseEntity<NestedCVO> getNestedCom(@PathVariable("c_idx") long
-	 * c_idx) { log.info("userReply controller get..");
-	 * 
-	 * return new ResponseEntity<>(comService.viewNestedCom(c_idx), HttpStatus.OK);
-	 * }
-	 */
 	
 	// 대댓글 삭제
 	@DeleteMapping(value="/reply/{nc_idx}", produces = MediaType.TEXT_PLAIN_VALUE)

@@ -9,26 +9,34 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script type="text/javascript">
+
 	$(function() {
 		
-		var editor = document.querySelector('#editor');
-		var btnImg = document.querySelector('#btn-img');
-		var imgSelector = document.querySelector('#img-selector');
-
+		var editor = document.querySelector('#editor');				// content
+		var btnImg = document.querySelector('#btn-img');			// 이미지 버튼
+		var imgSelector = document.querySelector('#img-selector');	// 파일 삽입
+		
+		// div editor에 포커스 주기
 		function focusEditor() {
 			editor.focus({preventScroll: true});
 		}
-
+	
+		// IMG 추가 버튼 클릭 시
 		btnImg.addEventListener('click', function() {
 			imgSelector.click();
 		});
 
 		imgSelector.addEventListener('change', function(e) {
-			var files = e.target.files;
-			if (files && files.length > 0) {
-				var file = files[0];
-				if (file.type.startsWith('image/')) {	// 이미지인지 판별
-					insertImg(file);
+			var files = e.target.files;					// 선택한 파일 가져옴
+			if (files && files.length > 0) {			// 파일 존재 시
+				var file = files[0];					// 다중 선택 시 첫 번째 파일만
+				
+				// 이미지인지 판별(이미지 삽입 여부 결정), 파일의 MIME 타입이 image/ 로 시작하면 이미지
+				// MIME : 멀티미디어 데이터를 전송하는 데 사용되는 인터넷 표준
+				// 이미지 : image/png, 텍스트 : text/plain, html 문서 : text/html, 오디오 : audio/mpeg ....
+				if (file.type.startsWith('image/')) {	
+					insertImg(file);		// 이미지 삽입 함수(editor에 삽입)
+					imgSelector.value = '';	// 이미지 삽입 후 선택창 닫고 초기화(중복 이미지 선택 가능)
 				} else {
 					alert('이미지 파일을 선택해주세요.');
 				}
@@ -37,11 +45,13 @@
 
 		function insertImg(file) {	// 이미지 삽입 함수
 			var reader = new FileReader();
-			reader.addEventListener('load', function(e) {
-				focusEditor();
-				document.execCommand('insertImage', false, reader.result);
+			reader.addEventListener('load', function(e) {	// 파일을 읽은 후
+				focusEditor();		// div 에디커에 포커스
+				
+				// 이미지 삽입 실행 커맨드, reader.result에 전달
+				document.execCommand('insertImage', false, reader.result);	
 			});
-			reader.readAsDataURL(file);
+			reader.readAsDataURL(file); // 선택한 이미지를 data url 로 변경
 		}
 		
 		// 게시글 등록 버튼 클릭 시 div 값 textarea에 값 옮겨주고
@@ -49,14 +59,17 @@
 		// div > textarea > DB
 		$('#post-btn').click(function() {	
 			$('#append').val($('#editor').html());
+			
+			var firstImage = $('#append').val().match(/<img [^>]*src=['"]([^'"]+)[^>]*>/i);
+			
+			if (firstImage && firstImage.length >= 2) {
+				var firstImageUrl = firstImage[1];
+				$('#append2').val(firstImageUrl);
+				
+				console.log(firstImageUrl);
+			} 
+			
 		});
-		
-		
-		/* var urlParams = new URLSearchParams(window.location.search);
-        var countryValue = urlParams.get('country');
-        
-        var countryInput = document.querySelector('input[name="country"]');
-        countryInput.value = countryValue; */
 		
 	});
 </script>
@@ -67,6 +80,7 @@
 		var operForm = $("#operForm");
 		var pageNumTag = $("input[name='pageNum']").clone();
 		var amountTag = $("input[name='amount']").clone();
+		var country = $("input[name='country']").clone();
 		
 		$("#mainBtn").on('click', function() {
 			operForm.empty();
@@ -74,6 +88,7 @@
 			
 			operForm.append(pageNumTag);
 			operForm.append(amountTag);
+			operForm.append(country);
 			
 			operForm.submit();
 		});
@@ -105,7 +120,7 @@
 		<button type="button" id="btn-img">IMG<!-- <img src="/resources/image/img-icon.png"/> --></button>
 		<br><br>
 		<div id="editor" contenteditable="true"></div>
-		<input id="img-selector" type="file" style="display: none;">
+		<input id="img-selector" type="file" style="display: none;">	<!-- 파일 입력 요소 생성 -->
 		<br>
 		<input type="submit" id="post-btn" value="게시글 등록">
 
@@ -114,6 +129,7 @@
 		<input type="hidden" name="pageNum" value="${cri.pageNum }">
 		<input type="hidden" name="amount" value="${cri.amount }">
 		<textarea name="up_content" id="append" style="display: none;"></textarea>
+		<textarea name="thumbnail" id="append2" style="display: none;"></textarea>
 	</form>
 	<!-- <button id="resetBtn">지우기</button> -->
 </body>

@@ -235,7 +235,9 @@
         <div id="repCommentList" style="height: 100%">
 
         </div>
-        <button type="button"onclick="closeRep()">닫기</button>
+        <div style="margin-top: 30px">
+            <button type="button"onclick="closeRep()">닫기</button>
+        </div>
     </div>
 
     <script !src="">
@@ -330,10 +332,10 @@
 
             datas.reportVO.forEach((d) => {
                 let date = new Date(d.reg_date);
-                let dates = date.getFullYear() + "년 " + date.getMonth() + "월 " + date.getDate() + "일"
+                let dates = date.getFullYear() + "년 " + (date.getMonth()+1) + "월 " + date.getDate() + "일"
                     texts += `<tr>`;
-                    texts += `<td> <a style="cursor: pointer" onclick="repPostGo(\${d.idx},'\${d.r_category}')">본문 보기</a> </td>
-                    <td> <a style="cursor: pointer" onclick="repReason(\${d.idx},'\${d.r_category}')">신고 사유</a> </td>
+                    texts += `<td> <b style="cursor: pointer" onclick="repPostGo(\${d.idx},'\${d.r_category}')">본문 보기</b> </td>
+                    <td> <b style="cursor: pointer" onclick="repReason(\${d.idx},'\${d.r_category}')">신고 사유</b> </td>
                     <td>\${dates} </td>
                     <td> \${d.r_count} </td>
                     <td> <button type="button" onclick="blind(\${d.idx},'\${d.r_category}')">블라인드 처리</button> </td>
@@ -456,7 +458,7 @@
                     document.getElementById("logo").style.opacity = "0.1";
                     viewComment.style.display = "inline-block";
                     data.forEach((d) =>{
-                        text +=`<div>\${d.R_CONTENT}</div>`;
+                        text +=`<div>\${d.R_CONTENT}</div> <hr>`;
                     })
                     document.getElementById("repCommentList").innerHTML = text;
                     document.getElementById("logo").style.cursor = "default";

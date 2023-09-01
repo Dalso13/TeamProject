@@ -9,6 +9,11 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style type="text/css">
+	.replyList {
+		margin-left: 50px;
+	}
+</style>
 </head>
 <body>	
     <div>
@@ -111,14 +116,14 @@
                             str += '<button class="replyBtn" data-c_idx="' + result[i].c_idx + '">답글</button>';		// 대댓글(답글)
                             
                             // button에 data-c_idx 담아서 보내고, controller에서 c_idx 어떻게 받지..? {c_idx}, @Pathvariable("c_idx") 이거 해야하나?
-                            str += '<button id="likeComment-btn" data-cliked="' + likeStatus + '" data-c_idx="' + result[i].c_idx + '">'
-                            str += '<img id="likeImg" src="../../../resources/image/userPost/dislike.png" style="border: none; width: 20px; height: 20px; cursor: pointer;">'
-                            str += '</button>'
+                            //str += '<button id="likeComment-btn" data-cliked="' + likeStatus + '" data-c_idx="' + result[i].c_idx + '">'
+                            //str += '<img id="likeImg" src="../../../resources/image/userPost/dislike.png" style="border: none; width: 20px; height: 20px; cursor: pointer;">'
+                            //str += '</button>'
                             //str += '<span id="likeCommentCount">' + likeCommentCount + '</span>';
                             //str += '<button class="reportComBtn" data-c_idx="' + result[i].c_idx + '">신고</button>';
-                            str += '<button class="reportBtn" data-target_idx="' + result[i].c_idx + '" data-report_category="comment">신고</button>';
+                            str += '<button class="reportBtn" data-target_idx="' + result[i].c_idx + '" data-report_category="comment"><img id="scrapImg" src="../../../resources/image/userPost/siren.png" style="border: none; width:20px; height: 20px; cursor: pointer;"></button>';
                             str += '</div>';
-                            setCommentButtonState(result[i].c_idx);
+                            //setCommentButtonState(result[i].c_idx);
                         }
                         commentList.html(str);
                     },
@@ -128,11 +133,9 @@
                 });
             }
             
-           	var likeCommentBtn = $("#likeComment-btn");
+           	/* var likeCommentBtn = $("#likeComment-btn");
             function setCommentButtonState(c_idx) {
             	
-            	//var c_idx = likeCommentBtn.attr("data-c_idx");
-            	//var c_idx = likeCommentBtn.data("c_idx");
             	var currentUser = '${currentUser}';
             	var likeCommentBtn = $(".likeComment-btn[data-c_idx='" + c_idx + "']");
 
@@ -168,7 +171,7 @@
             		});
             	}
             	
-            }
+            } */
 
             //setCommentButtonState();
             
@@ -177,7 +180,7 @@
             	alert(1);
             }); */
             
-            commentList.on("click", "#likeComment-btn", function(e) {
+           /*  commentList.on("click", "#likeComment-btn", function(e) {
             	e.preventDefault();
             	
             	var c_idx = $(this).data("c_idx");
@@ -220,7 +223,7 @@
             		});
             	}
             	
-            });
+            }); */
             
             // 대댓글 목록
             function showReplyList(c_idx, commentDiv) {
@@ -237,17 +240,17 @@
             				replyList += '<h5>답글 내용 : ' + result[i].nc_content + '</h5>';
             				replyList += '<h5>답글 작성 날짜 : ' + displayTime(result[i].reg_date) + '</h5>';
             				if (principal === result[i].u_writer) {            					
-	            				replyList += '<button class="modifyReplyBtn" data-nc_idx="' + result[i].nc_idx + '">수정</button>';		// 로그인 추가하면 코드 수정해야함
+	            				replyList += '<button class="modifyReplyBtn" data-nc_idx="' + result[i].nc_idx + '">수정</button>';
 	            				replyList += '<button class="deleteReplyBtn" data-nc_idx="' + result[i].nc_idx + '">삭제</button>';
             				}
             				/* replyList += '<button class="likeReplyBtn">좋아요</button>'; */
             				//replyList += '<button class="reportReplyBtn" data-nc_idx="' + result[i].nc_idx + '">신고</button>';
-            				replyList += '<button class="reportBtn" data-target_idx="' + result[i].nc_idx + '" data-report_category="reply">신고</button>';
+            				replyList += '<button class="reportBtn" data-target_idx="' + result[i].nc_idx + '" data-report_category="reply"><img id="scrapImg" src="../../../resources/image/userPost/siren.png" style="border: none; width:20px; height: 20px; cursor: pointer;"></button>';
             				replyList += '</div>';
             			}
 						
             			// 이전에 표시된 대댓글 목록 지우기
-						commentDiv.find(".replyList").remove();
+						//commentDiv.find(".replyList").remove();
             			// 새로운 대댓글 목록 commentDiv에 추가
 						commentDiv.append(replyList);
             			
@@ -305,8 +308,6 @@
             	var c_idx = $(this).data("c_idx");
             	var commentDiv = $(this).closest(".comment");	// 그냥 $(".comment") 하면 답글 버튼 누를 때마다 대댓글 입력 폼 보임
 
-            	//commentList.find('.replyForm', '.replyList').remove();
-            	
             	// 대댓글 작성 폼이 열려있으면 닫고, 아니면 열기
             	if (commentDiv.find('.replyForm').length > 0) {		// 입력 폼 이미 존재하면 닫기
             		commentDiv.find('.replyForm, .replyList').remove();

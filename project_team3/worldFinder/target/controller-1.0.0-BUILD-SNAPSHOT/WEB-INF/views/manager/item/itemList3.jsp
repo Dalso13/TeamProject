@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
 <html>
@@ -123,28 +123,14 @@
 
 </head>
 <body>
+	<%@include file="../../include/logoSerach.jsp"%>
 	<h1>item 페이지</h1>
 	
-<!-- 	CREATE TABLE item_table3 (
-   ITEM_IDX   NUMBER   primary key,
-   country   VARCHAR2(50)   references c_class_table3(country),
-   item_Name   VARCHAR2(50)   NOT NULL,
-   regdate   date   DEFAULT sysdate,
-   introduce   VARCHAR2(200)   NOT NULL,
-   image   VARCHAR2(50)   NOT NULL,
-   address   VARCHAR2(100)   NOT NULL,
-   item_Category   VARCHAR(255)   NOT NULL,
-   people   NUMBER   NOT NULL,
-   price   NUMBER,
-   tel   varchar2(30)   NOT NULL,
-   item_Option   VARCHAR2(20),
-   item_Url   varchar2(50)
-); -->
-	
-
 	<div class = "itemList" id="wholeDiv">
 		<div id="serachFilter">
-			<input id="tlqkf" type="button" value="등록하기" style="float: right;"><br><br>
+			<sec:authorize access="isAuthenticated()">
+				<input id="itemInsert" type="button" value="등록하기" style="float: right;"><br><br>
+			</sec:authorize>
 			
 			 <%@ include file="../../include/itemFilter.jsp"%>
 			<label id="countryInform"></label>
@@ -193,15 +179,66 @@
 <!-- onload -->
 <script type="text/javascript">
 
+	var itemFilter = new Object();	//검색 필터 정보 요소
 	$(function(){
-		var itemFilter = new Object();	//검색 필터 정보 요소
 		itemFilter.people = '1';	//인원수는 기본값이 1이므로 미리 추가
 		itemFilter.country = '';
 		itemFilter.item_Category = '';
 		itemFilter.startDay = '';
 		itemFilter.endDay = '';
 		itemFilter.page = '1';
+
+		console.log('${itemInfo }')
+		//나라 상속
+ 		if('${itemInfo.country }' != 'None'){
+			itemFilter.country = '${country.country }';			
+			let str = '${country.continent }' + ' > ' + '${country.details_continent }' + ' > ' + '${country.country }';
+			$("#countryInform").html(str);
+		}
+	 	if('${itemInfo.country }' == ''){
+			$("#countryInform").html('');
+			itemFilter.country = '';
+		}
 		
+		
+		
+		//인원수 상속
+		if('${itemInfo.people }' != ''){
+			let people = '${itemInfo.people }'
+			if(people <= 0){
+				people = '1';
+			}
+			itemFilter.people = people;
+			$("#peopleNum").val(people);
+		}
+		
+		//카테고리 상속
+		if('${itemInfo.item_Category }' != 'None'){
+			let cate = '${itemInfo.item_Category }';
+			$("#" + cate + "Able").attr('class', 'able');
+			itemFilter.item_Category = cate;
+		}
+		else{
+			itemFilter.item_Category = '';
+		}
+		
+		//날짜 상속
+		if('${itemInfo.startDay }' != '1900-01-01'){
+			itemFilter.startDay = '${itemInfo.startDay }';
+			$(".startEvent").val('${itemInfo.startDay }');
+		}
+		if('${itemInfo.endDay }' != '1900-01-01'){
+			itemFilter.startDay = '${itemInfo.endDay }';
+			$(".endEvent").val('${itemInfo.endDay }');
+		}
+		
+		//페이지 상속
+		let page = '${itemInfo.page }';
+		if(page > 0){
+			itemFilter.page = page;
+		}
+		
+		console.log(itemFilter);
 		ajaxItemList(itemFilter);	            
 	});	
 	
@@ -234,7 +271,6 @@
 	             
 				//본문 아이템 리스트
 				if(list.length == '0'){
-					//str += '<tr><td>아직 준비중입니다...죄송합니다!!</td></tr>';
 					str += '<label style="font-size: 1.5em;">결과가 존재하지 않습니다...</label>';
 				}
 				else{
@@ -242,13 +278,13 @@
 		
 						//상품 이미지 삽입
 						str += "<tr>";
-						str += '<td><img src="../../resources/img/'+ item.image +'.jpg" width="200px" height="160px"/></td>';
+						str += '<td><img src="../../resources/img/'+ item.image +'" width="200px" height="160px"/></td>';
 		               
 						//상품 정보
 						str += '<td width="600px"><ul>';
 						str += '<li><a href="#" id="getPage" idx="' + item.item_Idx + '" category = "' + item.item_Category + '">'+ item.item_Name +'</a></li>';
-						str += '<li>'+ item.address +'</li>';
-						str += '<li>'+ item.price +'</li>';
+						str += '<li>주소 : '+ item.address +'</li>';
+						str += '<li>가격 : '+ item.price +'</li>';
 						str += '</ul></td>';    
 						
 						//구글맵 api 삽입
@@ -416,18 +452,6 @@
 	});
 	
 	
-	//지도에 마우스 올리고 있을 때 ctrl 누르고 있는 상태로 설정
-	/* $(".detail").mouseover(function(){
-		console.log("마우스오버");
-		var e = jQuery.Event("keydown", {keyCode : 17});
-		$(this).trigger(e);
-	});
-	$(".detail").mouseout(function(){
-		console.log("마우스리브");
-	});
-	 */
-	
-	
 </script>
 
 <!-- 부트스트랩 캘린더 기본 셋팅 -->
@@ -477,7 +501,7 @@
 			,beforeShowDay: disableAllTheseDays 
 		});
 		
-		
+
 		// 특정일 배열(선택 비활성화)
 	   	//var disabledDays = ["2023-8-1","2023-7-27","2023-8-12"];
    		var disabledDays = [];
@@ -490,7 +514,7 @@
 	   	        }
 	   	    }
 	   	    return [true];
-	   	}
+	   	};
 	    
        //날짜 초기값 설정
        //$('#datepicker').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
@@ -512,6 +536,9 @@
 	itemFilter.startDay = '';
 	itemFilter.endDay = '';
 	
+	if('${country.country }' != ''){
+		itemFilter.country = '${country.country }';
+	}
 	
 	//검색 필터에 나라이름 삽입
 	function ranName(e){
@@ -661,19 +688,19 @@
 		var category = $(this).attr("category");
 		var idxGet = $(this).attr("idx"); 
 		
-		var url = '/manager/item/' + category + 'Get';
+		let url = '/manager/item/itemGet';
 		actionForm.attr('action', url);	//경로 변경	
 				
-		var peopleGet = itemFilter.people;
-		var pageGet = itemFilter.page;
+		let peopleGet = itemFilter.people;
+		let pageGet = itemFilter.page;
 		
 		
-		var countryGet = itemFilter.country;
-		var item_CategoryGet = itemFilter.item_Category;
-		var startDayGet = itemFilter.startDay;
-		var endDayGet = itemFilter.endDay;
+		let countryGet = itemFilter.country;
+		let item_CategoryGet = itemFilter.item_Category;
+		let startDayGet = itemFilter.startDay;
+		let endDayGet = itemFilter.endDay;
 					
-		if(countryGet == ''){
+	 	if(countryGet == ''){
 			countryGet = 'None';
 		}
 		if(item_CategoryGet == ''){
@@ -684,7 +711,7 @@
 		}
 		if(endDayGet == ''){
 			endDayGet = '1900-01-01';
-		}
+		} 
 		
 		actionForm.empty();
  		actionForm.append("<input type='hidden' name='idx' value = '" + idxGet + "'/>");		
@@ -698,12 +725,24 @@
  		actionForm.submit();
 	}); 
 	
-</script>
+	//등록하기로 넘어가기
+	$("#itemInsert").click(function(){
+		let country = itemFilter.country;
+		let categoryInfo = itemFilter.item_Category;
 
-
+		let url = '/manager/item/itemInsert';
+		actionForm.attr('action', url);	//경로 변경	
+		
+		actionForm.empty();
+		actionForm.append("<input type='hidden' name='country' value = '" + country + "'/>");
+		actionForm.append("<input type='hidden' name='categoryInfo' value = '" + categoryInfo + "'/>");	
+					
+		
+		actionForm.submit();
+	});
 	
-
-
+	
+</script>
 
 </body>
 </html>

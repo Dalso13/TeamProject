@@ -33,6 +33,7 @@
 				var file = files[0];
 				if (file.type.startsWith('image/')) {	// 이미지인지 판별
 					insertImg(file);
+					imgSelector.value = '';
 				} else {
 					alert('이미지 파일을 선택해주세요.');
 				}
@@ -50,6 +51,16 @@
 		
 		$('#update-btn').click(function() {	
 			$('#append').val($('#editor').html());
+			
+			var firstImage = $('#append').val().match(/<img [^>]*src=['"]([^'"]+)[^>]*>/i);
+			
+			if (firstImage && firstImage.length >= 2) {
+				var firstImageUrl = firstImage[1];
+				$('#append2').val(firstImageUrl);
+				
+				console.log(firstImageUrl);
+			}
+			
 		});
 		
 	});
@@ -103,6 +114,7 @@
 		<br>
 		<button id="update-btn">게시글 수정</button>
 		<textarea name="up_content" id="append" style="display: none;"></textarea>
+		<textarea name="thumbnail" id="append2" style="display: none;"></textarea>
 		<input type="hidden" name="up_idx" value="${list.up_idx }">
 		<input type="hidden" name="pageNum" value="${cri.pageNum }">
 		<input type="hidden" name="amount" value="${cri.amount }">
