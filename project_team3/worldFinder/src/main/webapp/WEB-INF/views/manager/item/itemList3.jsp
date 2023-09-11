@@ -112,7 +112,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <!-- 구글 맵 api 사용 설치 파일 -->
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDMR_wbRSxhUfjlmG_Pbk6OHjr6mJvgkMI"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key="></script>
 
 <!-- 부트스트랩 달력 사용 설치 파일 -->
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">

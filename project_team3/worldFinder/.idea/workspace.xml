@@ -9,7 +9,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ea3487b-e4fa-43a9-8dea-8c5c55310e5d" name="변경" comment="" />
+    <list default="true" id="9ea3487b-e4fa-43a9-8dea-8c5c55310e5d" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/../worldFinder.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main (2).zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/manager/item/itemList3.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/manager/item/itemList3.jsp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -161,6 +168,7 @@
       <workItem from="1693528359192" duration="3436000" />
       <workItem from="1693532805367" duration="9330000" />
       <workItem from="1693552025481" duration="2473000" />
+      <workItem from="1694420165194" duration="30000" />
     </task>
     <servers />
   </component>
